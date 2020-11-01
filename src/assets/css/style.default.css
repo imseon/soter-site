@@ -1,0 +1,98 @@
+﻿/* @import url('bootstrap.min.css'); */
+/* @import url('bootstrap-override.css'); */
+/* @import url('weather-icons.min.css'); */
+/* @import url('jquery-ui-1.10.3.css'); */
+/* @import url('font-awesome.min.css'); */
+/* @import url('animate.min.css'); */
+/* @import url('animate.delay.css'); */
+/* @import url('toggles.css'); */
+/* @import url('select2.css'); */
+/* @import url('lato.css'); */
+/* @import url('roboto.css'); */
+
+/* 初始化样式 */
+/*************************************/
+body,
+ul,
+ol,
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+fieldset,
+table,
+td,
+img,
+div,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+ul,
+ol {
+  list-style-type: none;
+}
+em,
+var,
+strong {
+  font-style: normal;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+img {
+  border: 0;
+  max-width: 100%;
+}
+.img_1 {
+  width: 100% !important;
+}
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+body {
+  font-family: 'LatoRegular', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, sans-serif !important;
+  line-height: 21px;
+  color: #636e7b;
+  /* font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu  */
+}
+
+body.notfound,
+body.signin {
+  background: #e4e7ea;
+}
+
+input,
+select,
+textarea {
+  font-family: 'LatoRegular', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, sans-serif !important;
+  color: #636e7b;
+  outline: none;
+}
+
+a:focus,
+a:active {
+  outline: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'LatoRegular', 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, sans-serif;
+}
+
+strong {
+  font-family: 'LatoBold';
+  font-weight: normal;
+}

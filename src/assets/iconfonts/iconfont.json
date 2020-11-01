@@ -1,0 +1,44 @@
+{
+  "id": "2166337",
+  "name": "soter",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "16896642",
+      "name": "bx-id-card",
+      "font_class": "bx-id-card",
+      "unicode": "e971",
+      "unicode_decimal": 59761
+    },
+    {
+      "icon_id": "544870",
+      "name": "male",
+      "font_class": "male",
+      "unicode": "e89d",
+      "unicode_decimal": 59549
+    },
+    {
+      "icon_id": "10168267",
+      "name": "female",
+      "font_class": "female",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "13851270",
+      "name": "coins-1",
+      "font_class": "coins-",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "1176845",
+      "name": "bell",
+      "font_class": "bell",
+      "unicode": "e6ac",
+      "unicode_decimal": 59052
+    }
+  ]
+}
