@@ -15,29 +15,39 @@
       </div>
       <div class="project-btn-grid">
         <div class="grid-r1">
-          <div class="grid-c1 ">
-            <img src="../assets/images/grid-1.png" width="85" height="85" class="grid-icon" />
-            <div class="grid-item-text">查看项目</div>
+          <div class="grid-c1">
+            <router-link to="/projectRoom">
+              <img src="../assets/images/grid-1.png" width="85" height="85" class="grid-icon" />
+              <div class="grid-item-text">查看项目</div>
+            </router-link>
           </div>
-          <div class="grid-c2 active">
-            <img src="../assets/images/grid-2.png" width="85" height="85" class="grid-icon" />
-            <div class="grid-item-text">可认领项目</div>
+          <div class="grid-c2">
+            <router-link to="/projectRoom">
+              <img src="../assets/images/grid-2.png" width="85" height="85" class="grid-icon" />
+              <div class="grid-item-text">可认领项目</div>
+            </router-link>
           </div>
           <div class="grid-c3 ">
-            <img src="../assets/images/grid-3.png" width="85" height="85" class="grid-icon" />
-            <div class="grid-item-text">奖励信息</div>
+            <router-link to="/rule">
+              <img src="../assets/images/grid-3.png" width="85" height="85" class="grid-icon" />
+              <div class="grid-item-text">奖励信息</div>
+            </router-link>
           </div>
         </div>
         <div class="grid-r2">
-          <div class="grid-c1 active">
-            <img src="../assets/images/grid-4.png" width="85" height="85" class="grid-icon" />
-            <div class="grid-item-text">漏洞复查</div>
+          <div class="grid-c1">
+            <router-link to="/myCenter">
+              <img src="../assets/images/grid-4.png" width="85" height="85" class="grid-icon" />
+              <div class="grid-item-text">漏洞复查</div>
+            </router-link>
           </div>
           <div class="grid-c2 ">
-            <img src="../assets/images/grid-5.png" width="85" height="85" class="grid-icon" />
-            <div class="grid-item-text">申领中项目</div>
+            <router-link to="/myCenter">
+              <img src="../assets/images/grid-5.png" width="85" height="85" class="grid-icon" />
+              <div class="grid-item-text">申领中项目</div>
+            </router-link>
           </div>
-          <div class="grid-c3 ">
+          <div class="grid-c3" v-scroll-to="{ el: '#homeRank', offset: 0 }">
             <img src="../assets/images/grid-6.png" width="85" height="85" class="grid-icon" />
             <div class="grid-item-text">任务排名</div>
           </div>
@@ -231,9 +241,12 @@ export default {
   .grid-c3 {
     padding-top: 28px;
     height: 100%;
-    &.active {
+    &:hover {
       background: url('../assets/images/project-btn-grid-highlight.png') repeat-x;
       height: 173px;
+    }
+    a {
+      display: block;
     }
   }
   .grid-c1 {

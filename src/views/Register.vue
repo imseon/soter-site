@@ -1,10 +1,6 @@
 <template>
   <div class="register">
-    <div class="head-bg">
-      <div class="content-wrapper">
-        <Header />
-      </div>
-    </div>
+    <Header />
     <div class="content-wrapper main-container">
       <div class="register-box">
         <div class="step-wrapper">
@@ -237,7 +233,7 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
+import Header from '@/components/CommonHeader.vue'
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 
@@ -414,7 +410,7 @@ export default {
     }
     return {
       checked: false,
-      currStep: 3,
+      currStep: 0,
       form: {
         type: 1
       },

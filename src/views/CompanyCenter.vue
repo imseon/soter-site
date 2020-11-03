@@ -1,10 +1,6 @@
 <template>
   <div class="my-center">
-    <div class="head-bg">
-      <div class="content-wrapper">
-        <Header />
-      </div>
-    </div>
+    <Header />
     <div class="content-wrapper">
       <div class="side-nav">
         <div :class="{ 'side-nav-item': true, active: currNav === 'basic' }" v-scroll-to="{ el: '#basic', offset: -140 }" @click="activeNav('basic')">
@@ -243,7 +239,7 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
+import Header from '@/components/CommonHeader.vue'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
 

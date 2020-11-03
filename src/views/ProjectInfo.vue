@@ -1,10 +1,6 @@
 <template>
   <div class="project-info">
-    <div class="head-bg">
-      <div class="content-wrapper">
-        <Header />
-      </div>
-    </div>
+    <Header />
     <div class="content-wrapper main-content">
       <div class="block-content block-1" v-if="projectInfo">
         <div class="company-avatar" :style="{ backgroundImage: `url(${projectInfo.companyAvatar})` }"></div>
@@ -61,7 +57,7 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
+import Header from '@/components/CommonHeader.vue'
 // import { Message } from 'element-ui'
 import { mapState } from 'vuex'
 

@@ -1,10 +1,6 @@
 <template>
   <div class="my-center">
-    <div class="head-bg">
-      <div class="content-wrapper">
-        <Header />
-      </div>
-    </div>
+    <CommonHeader />
     <div class="content-wrapper">
       <div class="side-nav">
         <div :class="{ 'side-nav-item': true, active: currNav === 'basic' }" v-scroll-to="{ el: '#basic', offset: -140 }" @click="activeNav('basic')">
@@ -174,13 +170,13 @@
               <div class="block-btn" style="text-align:right;">
                 <el-row :gutter="20">
                   <el-col :span="16">
-                    <el-input placeholder="请输入内容" class="input-search">
-                      <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-input placeholder="请输入内容" v-model="inputKeyword" class="input-search" size="mini">
+                      <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
                     </el-input>
                   </el-col>
                   <el-col :span="8">
                     <el-dropdown>
-                      <el-button type="primary">所有项目<i class="el-icon-arrow-down el-icon--right"></i> </el-button>
+                      <el-button type="primary" size="mini">所有项目<i class="el-icon-arrow-down el-icon--right"></i> </el-button>
                       <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item>黄金糕</el-dropdown-item>
                         <el-dropdown-item>狮子头</el-dropdown-item>
@@ -194,122 +190,43 @@
               </div>
             </div>
             <div class="block-content">
-              <div class="project-panel">
-                <div class="project-card">
+              <div class="no-result" v-if="projectErr">
+                没有项目
+              </div>
+              <div class="project-panel" v-if="myProjects && !projectErr">
+                <div class="project-card" v-for="project of myProjects.list" :key="project.projectId">
                   <div class="project-logo">
-                    <div class="project-avatar"></div>
+                    <div class="project-avatar" :style="{ backgroundImage: `url(${project.avatar})` }"></div>
                   </div>
-                  <div class="project-com-name">北京奇虎科技有限公司</div>
-                  <div class="project-name">项目名称可以使用十二个字</div>
+                  <div class="project-com-name">{{ project.companyName }}</div>
+                  <div class="project-name">{{ project.projectName }}</div>
                   <div class="project-data">
                     <div class="project-data-item">
                       <div>基本积分</div>
-                      <div>3000</div>
+                      <div>{{ project.inspectionScore }}</div>
                     </div>
                     <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                      <div>奖励积分</div>
+                      <div>{{ project.leakTopScore }}</div>
                     </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-logo">
-                    <div class="project-avatar"></div>
-                  </div>
-                  <div class="project-com-name">北京奇虎科技有限公司</div>
-                  <div class="project-name">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                    <div class="project-data-item" v-if="project.projectStatus == 5">
+                      <div>剩余时间</div>
+                      <div>{{ getExpireDay(project.expireDate) }}天</div>
                     </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                    <div class="project-data-item" v-if="project.projectStatus == 6">
+                      <div>剩余时间</div>
+                      <div>已完成</div>
                     </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-logo">
-                    <div class="project-avatar"></div>
-                  </div>
-                  <div class="project-com-name">北京奇虎科技有限公司</div>
-                  <div class="project-name">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-logo">
-                    <div class="project-avatar"></div>
-                  </div>
-                  <div class="project-com-name">北京奇虎科技有限公司</div>
-                  <div class="project-name">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-logo">
-                    <div class="project-avatar"></div>
-                  </div>
-                  <div class="project-com-name">北京奇虎科技有限公司</div>
-                  <div class="project-name">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-logo">
-                    <div class="project-avatar"></div>
-                  </div>
-                  <div class="project-com-name">北京奇虎科技有限公司</div>
-                  <div class="project-name">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                    <div class="project-data-item" v-if="project.projectStatus == 1">
+                      <div>剩余时间</div>
+                      <div>{{ project.expireDay }}天</div>
                     </div>
                   </div>
                   <div class="project-status">有三人投标待分配</div>
                 </div>
               </div>
-              <div class="table-pagination">
-                <el-pagination layout="prev, pager, next"> </el-pagination>
+              <div class="table-pagination" v-if="myProjects && !projectErr">
+                <el-pagination :current-page.sync="projectPage" :total="myProjects.totalNum" :page-size="pagesize" layout="prev, pager, next"> </el-pagination>
               </div>
             </div>
           </div>
@@ -333,9 +250,9 @@
             </div>
             <div class="block-content">
               <div class="leak-table-panel">
-                <el-table v-if="leakData" :data="leakData" border style="width: 100%" header-row-class-name="table-head">
+                <el-table :data="myLeaks && myLeaks.list" border style="width: 100%" header-row-class-name="table-head">
                   <el-table-column align="center" prop="createTime" label="漏洞级别" width="286"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="漏洞名称"> </el-table-column>
+                  <el-table-column header-align="center" prop="leakName" label="漏洞名称"> </el-table-column>
                   <el-table-column header-align="center" prop="title" label="所属行业"> </el-table-column>
                   <el-table-column header-align="center" prop="title" label="提交时间"> </el-table-column>
                   <el-table-column header-align="center" prop="title" label="漏洞状态"> </el-table-column>
@@ -382,18 +299,19 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
+import CommonHeader from '@/components/CommonHeader'
 
 export default {
-  components: { Header },
+  components: { CommonHeader },
   data() {
     return {
-      pagesize: 10,
-      page: 1,
+      pagesize: 6,
+      projectPage: 1,
+      leakPage: 1,
       noticeType: 'platform',
-      leakData: [{ createTime: 'haha', title: '333' }],
+      leakData: [],
       currNav: 'basic',
       uploadUrl: process.env.VUE_APP_API_ROOT + '/upload',
       account: {},
@@ -404,7 +322,11 @@ export default {
       form: {
         basic: {},
         account: {}
-      }
+      },
+      inputKeyword: '',
+      leakInputKeyword: '',
+      keyword: '',
+      leakKeyword: ''
     }
   },
   created() {
@@ -414,13 +336,18 @@ export default {
     noticeData: (state) => state.notice.notice,
     updateError: (state) => state.user.updateError,
     stat: (state) => state.user.stat,
-    score: (state) => state.user.score
+    score: (state) => state.user.score,
+    myProjects: (state) => state.project.myProjects,
+    myLeaks: (state) => state.project.myLeaks,
+    projectErr: (state) => state.project.err
   }),
   methods: {
     fetch() {
       this.loadAccount()
       this.$store.dispatch('user/stat')
       this.$store.dispatch('user/score')
+      this.$store.dispatch('project/mine', { page: this.projectPage, pagesize: this.pagesize, title: '' })
+      this.$store.dispatch('project/myLeaks', { page: this.leakPage, pagesize: this.pagesize, title: '' })
     },
     loadAccount() {
       let account = localStorage.getItem('u')
@@ -497,6 +424,26 @@ export default {
         Message.error('上传头像图片只能是 JPG 格式!')
       }
       return isJPG
+    },
+    getExpireDay(expireDate) {
+      if (expireDate) {
+        let endDate = new Date(expireDate.replace(/-/g, '/'))
+        let nowDate = new Date()
+        expireDate = parseInt((endDate - nowDate) / 1000)
+        expireDate = Math.floor(expireDate / (60 * 60 * 24))
+        expireDate = expireDate > 0 ? expireDate : '已结束'
+        return expireDate
+      }
+    },
+    search() {
+      this.keyword = this.inputKeyword
+      this.projectPage = 1
+      this.$store.dispatch('project/mine', { page: this.projectPage, pagesize: this.pagesize, title: this.keyword })
+    },
+    searchLeak() {
+      this.leakKeyword = this.leakInputKeyword
+      this.leakPage = 1
+      this.$store.dispatch('project/myLeaks', { page: this.leakPage, pagesize: this.pagesize, title: this.leakKeyword })
     }
   }
 }
@@ -508,18 +455,6 @@ export default {
   min-height: 100vh;
   background-color: #f7f7f7;
   padding-bottom: 20px;
-}
-.header {
-  padding-top: 38px;
-}
-.head-bg {
-  width: 100%;
-  background: url('../assets/images/header-bg.jpg') no-repeat center center;
-  background-size: 1920px 120px;
-  height: 120px;
-  position: fixed;
-  top: 0;
-  z-index: 1;
 }
 .side-nav {
   width: 144px;
@@ -756,6 +691,11 @@ export default {
         padding-bottom: 20px;
       }
     }
+    .no-result {
+      text-align: center;
+      color: #999;
+      padding: 20px;
+    }
     .project-panel {
       display: flex;
       flex-wrap: wrap;
@@ -764,7 +704,6 @@ export default {
         margin-top: 50px;
         width: 292px;
         height: 200px;
-        background-image: linear-gradient(to top right, #7cb93c, #85d038);
         border-radius: 5px;
         position: relative;
         text-align: center;
@@ -835,6 +774,24 @@ export default {
               border-right: 1px solid rgba(255, 255, 255, 0.6);
             }
           }
+        }
+        &:nth-child(1) {
+          background-image: linear-gradient(to top right, #3267a7, #2475d6);
+        }
+        &:nth-child(2) {
+          background-image: linear-gradient(to top right, #7cb93c, #85d038);
+        }
+        &:nth-child(3) {
+          background-image: linear-gradient(to top right, #ffa70f, #ffbc24);
+        }
+        &:nth-child(4) {
+          background-image: linear-gradient(to top right, #c2c3c2, #dfdfdf);
+        }
+        &:nth-child(5) {
+          background-image: linear-gradient(to top right, #7cb93c, #85d038);
+        }
+        &:nth-child(6) {
+          background-image: linear-gradient(to top right, #7cb93c, #85d038);
         }
       }
     }

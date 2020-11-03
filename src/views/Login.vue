@@ -1,5 +1,6 @@
 <template>
   <div class="login">
+    <CommonHeader />
     <div class="login-form-wrapper">
       <div class="logo-h"></div>
       <div class="login-form">
@@ -32,6 +33,7 @@
 <script>
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
+import CommonHeader from '@/components/CommonHeader'
 
 export default {
   data() {
@@ -53,6 +55,7 @@ export default {
       errLink: ''
     }
   },
+  components: { CommonHeader },
   computed: mapState({
     user: (state) => state.user.user,
     loginError: (state) => state.user.loginError
@@ -97,6 +100,7 @@ export default {
 .login {
   width: 100%;
   height: 100vh;
+  padding-top: 120px;
   background: url('../assets/images/login-bg.jpg') no-repeat left top;
   background-size: 1920px;
   position: relative;
@@ -107,7 +111,7 @@ export default {
   background: url('../assets/images/login-form-bg.png') no-repeat left top;
   background-size: 1629px;
   position: absolute;
-  top: 8vh;
+  top: calc(8vh + 120px);
   left: 6vw;
 }
 .logo-h {

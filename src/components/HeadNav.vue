@@ -2,7 +2,7 @@
   <div class="head-nav">
     <ul class="nav-list">
       <li><router-link class="nav-item" to="/home">首页</router-link></li>
-      <li><router-link class="nav-item" to="/project">项目大厅</router-link></li>
+      <li><router-link class="nav-item" to="/projectRoom" v-if="!user || user.u.identitycard">项目大厅</router-link></li>
       <li><router-link class="nav-item" to="/messageCenter">公告中心</router-link></li>
       <li><router-link class="nav-item" to="/help">帮助中心</router-link></li>
     </ul>
@@ -11,7 +11,15 @@
 </template>
 
 <script>
-export default {}
+import { mapState } from 'vuex'
+export default {
+  computed: mapState({
+    user: (state) => state.user.user
+  }),
+  created() {
+    this.$store.dispatch('user/check')
+  }
+}
 </script>
 
 <style scoped lang="scss">

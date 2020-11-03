@@ -38,6 +38,7 @@ export default {
   },
   actions: {
     async login({ commit }, { params }) {
+      commit('setLoginError', null)
       let { data, err } = await request({
         url: `${apiAuthRoot}/auth/login`,
         params

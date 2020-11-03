@@ -1,10 +1,6 @@
 <template>
   <div class="notice">
-    <div class="head-bg">
-      <div class="content-wrapper">
-        <Header />
-      </div>
-    </div>
+    <Header />
     <PageBanner>
       <div class="r1">平台公告中心</div>
       <div class="r2">PING TAI GONG GAO ZHONG XIN</div>
@@ -15,7 +11,7 @@
           <router-link to="/home">回到首页></router-link>
         </div>
         <div class="table-wrapper">
-          <el-table v-if="noticeData" :data="noticeData.list" border style="width: 100%" header-row-class-name="table-head">
+          <el-table v-if="noticeData" :data="noticeData.list" border style="width: 100%" header-row-class-name="table-head" @row-click="openNotice" row-class-name="notice-table-row">
             <el-table-column align="center" prop="createTime" label="发布日期" width="286"> </el-table-column>
             <el-table-column header-align="center" prop="title" label="公告标题"> </el-table-column>
           </el-table>
@@ -29,8 +25,9 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'
+import Header from '@/components/CommonHeader.vue'
 import PageBanner from '@/components/PageBanner.vue'
+import { MessageBox } from 'element-ui'
 
 import { mapState } from 'vuex'
 
@@ -57,7 +54,13 @@ export default {
     fetch() {
       this.$store.dispatch('notice/fetch', { pagesize: this.pagesize, page: this.page })
     },
-    handleTypeChange() {}
+    openNotice(notice) {
+      MessageBox.alert(notice.content, notice.title, {
+        customClass: 'notice-msg-box',
+        confirmButtonClass: 'notice-msg-box-confirm-btn',
+        confirmButtonText: '关闭'
+      })
+    }
   }
 }
 </script>
@@ -67,18 +70,6 @@ export default {
 .notice {
   min-height: 100vh;
   background-color: #f7f7f7;
-}
-.header {
-  padding-top: 38px;
-}
-.head-bg {
-  width: 100%;
-  background: url('../assets/images/header-bg.jpg') no-repeat center center;
-  background-size: 1920px 120px;
-  height: 120px;
-  position: fixed;
-  top: 0;
-  z-index: 1;
 }
 .page-banner {
   margin-top: 120px;
@@ -121,6 +112,16 @@ export default {
 }
 </style>
 <style lang="scss">
+.notice-table-row {
+  cursor: pointer;
+}
+.notice-msg-box {
+  width: 800px;
+}
+// .notice-msg-box-confirm-btn {
+//   background-color: #7cb83e !important;
+//   border: 0 none !important;
+// }
 .table-head th {
   background-color: #7cb83e;
   color: white;

@@ -5,30 +5,11 @@ import router from './router'
 import Vuex from 'vuex'
 import VueScrollTo from 'vue-scrollto'
 
-import { Button, Table, TableColumn, Pagination, Form, FormItem, Input, Dropdown, DropdownItem, DropdownMenu, Row, Col, RadioGroup, RadioButton, Radio, Divider, Upload, Steps, Step, Checkbox } from 'element-ui'
+import ElementUI from './element-ui'
 import './styles/element-vars.scss'
-Vue.component(Button.name, Button)
-Vue.component(Table.name, Table)
-Vue.component(TableColumn.name, TableColumn)
-Vue.component(Pagination.name, Pagination)
-Vue.component(Form.name, Form)
-Vue.component(FormItem.name, FormItem)
-Vue.component(Input.name, Input)
-Vue.component(Dropdown.name, Dropdown)
-Vue.component(DropdownItem.name, DropdownItem)
-Vue.component(DropdownMenu.name, DropdownMenu)
-Vue.component(Row.name, Row)
-Vue.component(Col.name, Col)
-Vue.component(RadioGroup.name, RadioGroup)
-Vue.component(RadioButton.name, RadioButton)
-Vue.component(Radio.name, Radio)
-Vue.component(Divider.name, Divider)
-Vue.component(Upload.name, Upload)
-Vue.component(Steps.name, Steps)
-Vue.component(Step.name, Step)
-Vue.component(Checkbox.name, Checkbox)
 
 Vue.config.productionTip = false
+Vue.use(ElementUI)
 Vue.use(Vuex)
 Vue.use(VueScrollTo, {
   container: 'body',

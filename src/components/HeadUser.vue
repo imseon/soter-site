@@ -11,7 +11,7 @@
           <router-link tag="span" to="/editPwd">修改密码</router-link>
         </el-dropdown-item>
         <el-dropdown-item>
-          <router-link tag="span" to="/myCenter">个人中心</router-link>
+          <router-link v-if="toCenter" tag="span" :to="toCenter">个人中心</router-link>
         </el-dropdown-item>
         <el-dropdown-item>
           <span @click="logout">退出登录</span>
@@ -26,8 +26,14 @@ import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
-  created() {
-    this.$store.dispatch('user/check')
+  data() {
+    return {
+      toCenter: ''
+    }
+  },
+  async created() {
+    await this.$store.dispatch('user/check')
+    this.toCenter = this.user && this.user.u.identitycard ? '/myCenter' : 'companyCenter'
   },
   computed: mapState({
     user: (state) => state.user.user

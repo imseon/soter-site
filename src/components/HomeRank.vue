@@ -1,5 +1,5 @@
 <template>
-  <div class="home-rank">
+  <div class="home-rank" id="homeRank">
     <div class="rank-title">
       <span>贡献英雄排行榜</span>
     </div>
@@ -334,25 +334,25 @@ export default {
   justify-content: space-between;
   margin-top: 22px;
   .other-tops-item {
-    width: 176px;
-    height: 176px;
+    width: 156px;
+    height: 156px;
     position: relative;
     background-image: linear-gradient(to top right, #3eb292, #66dbbe);
     .user-avatar {
-      width: 78px;
-      height: 78px;
-      border-radius: 78px;
+      width: 58px;
+      height: 58px;
+      border-radius: 58px;
       border: 6px solid #5bc0b6;
       background: #d2fff4;
       position: absolute;
       top: 12px;
       left: 50%;
-      margin-left: -45px;
+      margin-left: -35px;
       .user-seq {
-        width: 36px;
-        height: 36px;
-        border-radius: 36px;
-        line-height: 36px;
+        width: 28px;
+        height: 28px;
+        border-radius: 28px;
+        line-height: 28px;
         background: #3f66a0;
         font-size: 16px;
         color: white;
@@ -360,7 +360,7 @@ export default {
         font-weight: bolder;
         position: absolute;
         bottom: 0;
-        left: -18px;
+        left: -13px;
       }
     }
     .user-detail {

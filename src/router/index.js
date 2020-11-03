@@ -63,6 +63,11 @@ const routes = [
     path: '/userInfo',
     name: 'Register',
     component: () => import('../views/ProjectInfo.vue')
+  },
+  {
+    path: '/projectRoom',
+    name: 'ProjectRoom',
+    component: () => import('../views/ProjectRoom.vue')
   }
 ]
 
