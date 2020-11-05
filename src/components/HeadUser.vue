@@ -2,7 +2,7 @@
   <div class="head-user">
     <div v-if="!user">
       <router-link to="/login" class="login-btn">登录</router-link>
-      <router-link to="/login" class="login-btn">注册</router-link>
+      <router-link to="/register" class="login-btn">注册</router-link>
     </div>
     <el-dropdown v-else trigger="click">
       <div class="user-avatar" :style="{ backgroundImage: `url(${user.u.picture})` }"></div>

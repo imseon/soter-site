@@ -68,6 +68,21 @@ const routes = [
     path: '/projectRoom',
     name: 'ProjectRoom',
     component: () => import('../views/ProjectRoom.vue')
+  },
+  {
+    path: '/rule',
+    name: 'Rule',
+    component: () => import('../views/Rule.vue')
+  },
+  {
+    path: '/projectIssue',
+    name: 'ProjectIssue',
+    component: () => import('../views/ProjectIssue.vue')
+  },
+  {
+    path: '/companyleakInfo',
+    name: 'CompanyLeakInfo',
+    component: () => import('../views/CompanyLeakInfo.vue')
   }
 ]
 

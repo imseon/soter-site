@@ -7,6 +7,7 @@ export default {
     list: null,
     unApplyList: null,
     info: null,
+    leakInfo: null,
     err: null,
     leakErr: null,
     myProjects: null,
@@ -27,6 +28,9 @@ export default {
     },
     setMyLeaks(state, data) {
       state.myLeaks = data
+    },
+    setLeakInfo(state, data) {
+      state.leakInfo = data
     },
     setError(state, err) {
       state.err = err
@@ -61,23 +65,47 @@ export default {
       if (err) commit('setError', err)
       else commit('setUnApplyList', data)
     },
-    async mine({ commit }, { page = 1, pagesize = 6, title = '' }) {
+    async mine({ commit }, { page = 1, pagesize = 6, title = '', type = 'acc' }) {
       commit('setError', null)
       let uid = localStorage.getItem('d')
       let { data, err } = await request({
-        url: `${apiRoot}/acc/pro/${uid}/${page}/${pagesize}?title=${title}`
+        url: `${apiRoot}/${type}/pro/${uid}/${page}/${pagesize}?title=${title}`
       })
       if (err) commit('setError', err)
       else commit('setMyProjects', data)
     },
-    async myLeaks({ commit }, { page = 1, pagesize = 6, title = '' }) {
+    async myLeaks({ commit }, { page = 1, pagesize = 6, title = '', type = 'acc' }) {
       commit('setLeakError', null)
       let uid = localStorage.getItem('d')
       let { data, err } = await request({
-        url: `${apiRoot}/acc/leak/${uid}/${page}/${pagesize}?title=${title}`
+        url: `${apiRoot}/${type}/leak/${uid}/${page}/${pagesize}?title=${title}`
       })
       if (err) commit('setLeakError', err)
       else commit('setMyLeaks', data)
+    },
+    async add({ commit }, { params }) {
+      commit('setError', null)
+      let { err } = await request({
+        method: 'POST',
+        url: `${apiRoot}/pro/add`,
+        data: params
+      })
+      if (err) commit('setError', err)
+    },
+    async leakInfo({ commit }, { aid }) {
+      commit('setLeakError', null)
+      let { data, err } = await request({
+        url: `${apiRoot}/leak/info/${aid}`
+      })
+      if (err) commit('setLeakError', err)
+      else commit('setLeakInfo', data)
+    },
+    async verify({ commit }, { leakId }) {
+      commit('setLeakError', null)
+      let { err } = await request({
+        url: `${apiRoot}/comp/varify/${leakId}`
+      })
+      if (err) commit('setLeakError', err)
     }
   }
 }

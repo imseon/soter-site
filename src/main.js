@@ -52,7 +52,7 @@ router.beforeEach((to, from, next) => {
     let u = localStorage.getItem('u')
     if (u) {
       let acc = JSON.parse(u)
-      if (!acc.identitycard && ['/home', '/editPwd', '/forgetPwd', '/rule', '/messageCenter', '/companyleackInfo', '/projectIssue', '/companyCenter', '/projectInfo'].indexOf(to.path) < 0) {
+      if (!acc.identitycard && ['/home', '/editPwd', '/forgetPwd', '/rule', '/messageCenter', '/companyLeakInfo', '/projectIssue', '/companyCenter', '/projectInfo'].indexOf(to.path) < 0) {
         next('/home')
         return
       }

@@ -28,7 +28,7 @@
             </router-link>
           </div>
           <div class="grid-c3 ">
-            <router-link to="/rule">
+            <router-link to="/rule?name=2">
               <img src="../assets/images/grid-3.png" width="85" height="85" class="grid-icon" />
               <div class="grid-item-text">奖励信息</div>
             </router-link>

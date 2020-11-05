@@ -2,56 +2,65 @@
   <div class="project-info">
     <Header />
     <div class="content-wrapper main-content">
-      <div class="block-content block-1" v-if="projectInfo">
-        <div class="company-avatar" :style="{ backgroundImage: `url(${projectInfo.companyAvatar})` }"></div>
-        <div class="company-name">{{ projectInfo.companyName }}</div>
+      <div class="block-content block-1">
+        <div class="company-avatar" :style="{ backgroundImage: `url(${company.avatar})` }"></div>
+        <div class="company-name">{{ company.name }}</div>
         <div class="company-intro">
-          <div class="intro-content">{{ projectInfo.companyIntro }}</div>
+          <div class="intro-content">{{ company.intro }}</div>
         </div>
-        <div :class="{ 'days-left': true, expired: expireDay <= 0 }">
+        <div class="days-left">
           <div class="r1">
             <span class="num">
-              {{ expireDay }}
+              <el-input class="expire-input" v-model="form.expireDay"></el-input>
             </span>
-            天
+            <span>天</span>
           </div>
-          <div class="r2">剩余时间</div>
+          <div class="r2">项目时间</div>
         </div>
         <el-divider></el-divider>
         <div class="project-detail">
           <div class="project-title-panel">
             <h3 class="subtitle">项目名</h3>
-            <div class="project-title">{{ projectInfo.title }}</div>
+            <div class="project-title">
+              <el-input class="title-input" v-model="form.title"></el-input>
+            </div>
+          </div>
+          <div class="project-domain-panel">
+            <h3 class="subtitle">项目范围</h3>
+            <div class="project-title">
+              <el-input class="title-input" v-model="form.domain"></el-input>
+            </div>
           </div>
           <div class="project-desc-panel">
-            <h3 class="subtitle">漏洞收集范围</h3>
-            <div class="project-desc">{{ projectInfo.description }}</div>
+            <h3 class="subtitle">项目详情</h3>
+            <div class="project-desc">
+              <el-input type="textarea" class="desc-input" v-model="form.description" :rows="10"> </el-input>
+            </div>
           </div>
           <div class="project-bonus">
             <div class="bonus-title"><i class="iconfont icon-coins"></i>项目奖励积分</div>
             <div class="bonus-point">
               <div class="point-detail">
-                <div class="bonus-num">{{ projectInfo.inspectionScore }}</div>
+                <div class="bonus-num">
+                  <el-input class="point-input" v-model="form.inspectionScore"></el-input>
+                </div>
                 <div class="bonus-name">基础积分</div>
               </div>
               <div class="point-detail">
                 <i class="el-icon-plus"></i>
               </div>
               <div class="point-detail">
-                <div class="bonus-num">{{ projectInfo.leakTopScore }}</div>
+                <div class="bonus-num">
+                  <el-input class="point-input" v-model="form.leakTopScore"></el-input>
+                </div>
                 <div class="bonus-name">奖励积分</div>
               </div>
             </div>
-            <div class="bonus-rule">
-              <router-link :to="{ path: '/rule', query: { name: '2' } }">积分奖励规则>></router-link>
-            </div>
+            <div class="bonus-rule">积分奖励规则>></div>
           </div>
         </div>
-      </div>
-      <div class="block-content">
-        <h3 class="subtitle">应标人员</h3>
         <div class="bottom-btn">
-          <el-button type="primary">选择白帽</el-button>
+          <el-button type="primary" :disabled="adding" @click="publish" style="width:120px">发布项目</el-button>
         </div>
       </div>
     </div>
@@ -60,41 +69,60 @@
 
 <script>
 import Header from '@/components/CommonHeader.vue'
-// import { Message } from 'element-ui'
+import { Message } from 'element-ui'
 import { mapState } from 'vuex'
 
 export default {
   components: { Header },
   data() {
-    return {}
+    return {
+      form: {},
+      adding: false
+    }
   },
   created() {
     this.fetch()
   },
-  computed: {
-    ...mapState({
-      projectInfo: (state) => state.project.info
-    }),
-    expireDay() {
-      if (this.projectInfo) {
-        if (this.project.expireDate) {
-          return this.timeDown(this.project.expireDate)
-        } else {
-          return this.project.expireDay * 1
-        }
-      }
-      return 0
-    }
-  },
+  computed: mapState({
+    company: (state) => state.user.user.u,
+    addErr: (state) => state.project.err
+  }),
   methods: {
-    fetch() {
-      this.$store.dispatch('project/info', { pid: this.$route.query.pid })
+    async fetch() {
+      await this.$store.dispatch('user/check')
     },
-    timeDown(endDateStr) {
-      var endDate = new Date(endDateStr.replace(/-/g, '/'))
-      var nowDate = new Date()
-      var totalSeconds = parseInt((endDate - nowDate) / 1000)
-      return Math.floor(totalSeconds / (60 * 60 * 24))
+    async publish() {
+      if (!this.form.title) {
+        Message.error('请填写项目标题')
+        return
+      } else if (this.form.title.length > 10) {
+        Message.error('标题最多十个字')
+        return
+      }
+      if (!this.form.domain) {
+        Message.error('请填写项目范围')
+        return
+      }
+      if (!this.form.description) {
+        Message.error('请填写项目描述')
+        return
+      }
+      if (!this.form.expireDay) {
+        Message.error('请填写限定时长')
+        return
+      }
+      if (!this.form.inspectionScore || !this.form.leakTopScore) {
+        Message.error('请填写项目积分')
+        return
+      }
+      this.form.compId = this.company.id
+      await this.$store.dispatch('project/add', { params: this.form })
+      if (this.addErr) {
+        Message.error('发布失败')
+        return
+      }
+      Message.success('发布成功')
+      this.$router.back(-1)
     }
   }
 }
@@ -174,8 +202,19 @@ export default {
       left: -8px;
     }
   }
+  .project-title-panel,
+  .project-domain-panel {
+    display: flex;
+    align-items: center;
+  }
+  .project-domain-panel {
+    margin-top: 40px;
+  }
   .project-title {
-    margin-top: 20px;
+    margin-left: 20px;
+    .title-input {
+      width: 400px;
+    }
   }
   .project-desc-panel {
     margin-top: 40px;
@@ -183,6 +222,9 @@ export default {
   .project-desc {
     margin-top: 20px;
     margin-right: 500px;
+    .desc-input {
+      width: 604px;
+    }
   }
   .bottom-btn {
     margin-top: 20px;
@@ -209,7 +251,7 @@ export default {
     justify-content: center;
     margin-top: 20px;
     .point-detail {
-      height: 185px;
+      height: 125px;
       padding: 0 10px;
       display: flex;
       flex-direction: column;
@@ -228,6 +270,9 @@ export default {
         font-weight: bolder;
         margin: 0 30px;
       }
+      .point-input {
+        width: 120px;
+      }
     }
   }
   .bonus-rule {
@@ -244,14 +289,12 @@ export default {
     text-align: right;
     line-height: 1.2;
     color: #7cb83e;
-    &.expired {
-      color: #999999;
-    }
     .r1 {
       font-size: 34px;
       font-weight: bolder;
       display: flex;
-      align-items: baseline;
+      align-items: flex-start;
+      margin-bottom: 6px;
     }
     .r2 {
       font-size: 22px;
@@ -260,6 +303,10 @@ export default {
     .num {
       font-size: 60px;
       margin-right: 5px;
+      display: flex;
+      .expire-input {
+        width: 60px;
+      }
     }
   }
 }

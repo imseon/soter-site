@@ -73,8 +73,8 @@
               <div class="block-btn" style="text-align:right;">
                 <el-row :gutter="20">
                   <el-col :span="16">
-                    <el-input placeholder="请输入内容" class="input-search">
-                      <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-input placeholder="请输入内容" v-model="projectInputKeyword" class="input-search">
+                      <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
                     </el-input>
                   </el-col>
                   <el-col :span="8">
@@ -93,108 +93,66 @@
               </div>
             </div>
             <div class="block-content">
-              <div class="project-panel">
-                <div class="project-card">
-                  <div class="project-name">北京奇虎科技有限公司</div>
-                  <div class="project-handle">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-name">北京奇虎科技有限公司</div>
-                  <div class="project-handle">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-name">北京奇虎科技有限公司</div>
+              <div class="project-panel" v-if="myProjects">
+                <div class="project-card" v-for="project of myProjects.list" :key="project.projectId">
+                  <div class="project-name">{{ project.projectName }}</div>
                   <div class="project-handle">
-                    <span class="handler-prefix">测试白帽: </span>
-                    <span class="handler-avatar"></span>
-                    <span class="handler-name">用户名字七个字</span>
+                    <div v-if="project.projectStatus == 1" style="height: 35px;">有{{ project.accNum }}人投标待分配</div>
+                    <div v-if="project.projectStatus == 0" style="height: 35px;">
+                      项目待审核
+                    </div>
+                    <div v-if="project.projectStatus == 5 || (project.projectStatus == 6 && project.projectStatus != 3)">
+                      <span>测试白帽:</span>
+                      <img style="margin-top:0px" :src="project.accPic" alt="" />
+                      <span>{{ project.accName }}</span>
+                    </div>
                   </div>
                   <div class="project-data">
                     <div class="project-data-item">
                       <div>基本积分</div>
-                      <div>3000</div>
+                      <div>{{ project.inspectionScore }}</div>
                     </div>
                     <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                      <div>奖励积分</div>
+                      <div>{{ project.leakTopScore }}</div>
+                    </div>
+                    <div class="project-data-item" v-if="project.projectStatus == 5">
+                      <p>剩余时间</p>
+                      <p>{{ getExpireDay(project.expireDate) }}天</p>
+                    </div>
+                    <div class="project-data-item" v-if="project.projectStatus == 6">
+                      <p>剩余时间</p>
+                      <p>已完成</p>
+                    </div>
+                    <div class="project-data-item" v-if="project.projectStatus == 1 || project.projectStatus == 0 || project.projectStatus == 3">
+                      <p>剩余时间</p>
+                      <p>{{ project.expireDay }}天</p>
                     </div>
                   </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-name">北京奇虎科技有限公司</div>
-                  <div class="project-handle">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                  <div class="project-status">
+                    <div v-if="project.projectStatus == 0">
+                      待审核
                     </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                    <div v-if="project.projectStatus == 1">
+                      审核成功
                     </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-name">北京奇虎科技有限公司</div>
-                  <div class="project-handle">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                    <div v-if="project.projectStatus == 3">
+                      审核失败
                     </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                    <div v-if="project.projectStatus == 5">
+                      项目进行中
                     </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
+                    <div v-if="project.projectStatus == 6">
+                      已结束
                     </div>
                   </div>
-                  <div class="project-status">有三人投标待分配</div>
-                </div>
-                <div class="project-card">
-                  <div class="project-name">北京奇虎科技有限公司</div>
-                  <div class="project-handle">项目名称可以使用十二个字</div>
-                  <div class="project-data">
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                    <div class="project-data-item">
-                      <div>基本积分</div>
-                      <div>3000</div>
-                    </div>
-                  </div>
-                  <div class="project-status">有三人投标待分配</div>
                 </div>
               </div>
               <div class="table-pagination">
-                <el-pagination layout="prev, pager, next"> </el-pagination>
+                <el-pagination @current-change="handleProjectPageChange" :total="myProjects.totalNum" :current-page="page" :page-size="pagesize" layout="prev, pager, next"> </el-pagination>
+              </div>
+              <div class="bottom-btn">
+                <router-link :to="{ path: '/projectIssue', query: {} }">发布项目</router-link>
               </div>
             </div>
           </div>
@@ -209,8 +167,8 @@
                     <div class="leak-desc">漏洞级别及状态说明</div>
                   </el-col>
                   <el-col :span="16">
-                    <el-input placeholder="请输入内容" class="input-search">
-                      <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-input placeholder="请输入内容" class="input-search" v-model="leakInputKeyword">
+                      <el-button slot="append" icon="el-icon-search" @click="searchLeak"></el-button>
                     </el-input>
                   </el-col>
                 </el-row>
@@ -218,13 +176,11 @@
             </div>
             <div class="block-content">
               <div class="leak-table-panel">
-                <el-table v-if="leakData" :data="leakData" border style="width: 100%" header-row-class-name="table-head">
-                  <el-table-column align="center" prop="createTime" label="漏洞级别" width="286"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="漏洞名称"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="所属行业"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="提交时间"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="漏洞状态"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="奖励积分"> </el-table-column>
+                <el-table v-if="myLeaks" :data="myLeaks.list" border style="width: 100%" header-row-class-name="table-head" @row-click="navToLeakInfo">
+                  <el-table-column align="center" prop="projectName" label="项目" width="286"> </el-table-column>
+                  <el-table-column align="center" prop="leakName" label="漏洞名称"> </el-table-column>
+                  <el-table-column align="center" prop="createTime" label="提交时间"> </el-table-column>
+                  <el-table-column align="center" prop="leakStatus" label="漏洞状态" :formatter="formatLeakStatus"> </el-table-column>
                 </el-table>
                 <div class="table-pagination">
                   <el-pagination layout="prev, pager, next"> </el-pagination>
@@ -247,10 +203,11 @@ export default {
   components: { Header },
   data() {
     return {
-      pagesize: 10,
+      pagesize: 3,
+      leakPagesize: 10,
       page: 1,
+      leakPage: 1,
       noticeType: 'platform',
-      leakData: [{ createTime: 'haha', title: '333' }],
       currNav: 'basic',
       uploadUrl: process.env.VUE_APP_API_ROOT + '/upload',
       account: null,
@@ -259,17 +216,26 @@ export default {
       },
       form: {
         basic: {}
-      }
+      },
+      projectInputKeyword: '',
+      projectKeyword: '',
+      leakInputKeyword: '',
+      leakKeyword: ''
     }
   },
   created() {
     this.fetch()
   },
-  computed: mapState({}),
+  computed: mapState({
+    myProjects: (state) => state.project.myProjects,
+    myLeaks: (state) => state.project.myLeaks
+  }),
   methods: {
     async fetch() {
       this.loadAccount()
       this.$store.dispatch('company/fetch')
+      this.$store.dispatch('project/mine', { page: this.page, pagesize: this.pagesize, title: '', type: 'comp' })
+      this.$store.dispatch('project/myLeaks', { page: this.leakPage, pagesize: this.leakPagesize, title: '', type: 'comp' })
       this.reset()
     },
     loadAccount() {
@@ -339,6 +305,48 @@ export default {
         Message.error('上传头像图片只能是 JPG 格式!')
       }
       return isJPG
+    },
+    getExpireDay(expireDate) {
+      if (expireDate) {
+        let endDate = new Date(expireDate.replace(/-/g, '/'))
+        let nowDate = new Date()
+        expireDate = parseInt((endDate - nowDate) / 1000)
+        expireDate = Math.floor(expireDate / (60 * 60 * 24))
+        expireDate = expireDate > 0 ? expireDate : '已结束'
+        return expireDate
+      }
+    },
+    handleProjectPageChange(page) {
+      this.page = page
+      this.$store.dispatch('project/mine', { page: this.page, pagesize: this.pagesize, title: '', type: 'comp' })
+    },
+    formatLeakStatus(row) {
+      if (row.leakStatus == 0) {
+        return '待审核'
+      } else if (row.leakStatus == 1) {
+        return '审核通过'
+      } else if (row.leakStatus == 3) {
+        return '审核失败'
+      } else if (row.leakStatus == 4) {
+        return '已确认'
+      } else if (row.leakStatus == 5) {
+        return '已完成'
+      } else if (row.leakStatus == 6) {
+        return '已结束'
+      }
+    },
+    navToLeakInfo(leak) {
+      this.$router.push('/companyLeakInfo?a=' + leak.leakId)
+    },
+    searchProject() {
+      this.projectKeyword = this.projectInputKeyword
+      this.page = 1
+      this.$store.dispatch('project/mine', { page: this.page, pagesize: this.pagesize, title: this.projectKeyword, type: 'comp' })
+    },
+    searchLeak() {
+      this.leakKeyword = this.leakInputKeyword
+      this.leakPage = 1
+      this.$store.dispatch('project/myLeaks', { page: this.leakPage, pagesize: this.leakPagesize, title: this.leakKeyword, type: 'comp' })
     }
   }
 }
@@ -526,7 +534,6 @@ export default {
         margin-top: 50px;
         width: 292px;
         height: 200px;
-        background-image: linear-gradient(to top right, #7cb93c, #85d038);
         border-radius: 5px;
         position: relative;
         text-align: center;
@@ -614,11 +621,34 @@ export default {
             }
           }
         }
+        &:nth-child(1) {
+          background-image: linear-gradient(to top right, #3267a7, #2475d6);
+        }
+        &:nth-child(2) {
+          background-image: linear-gradient(to top right, #7cb93c, #85d038);
+        }
+        &:nth-child(3) {
+          background-image: linear-gradient(to top right, #ffa70f, #ffbc24);
+        }
       }
     }
     .table-pagination {
       margin-top: 10px;
       text-align: center;
+    }
+    .bottom-btn {
+      text-align: center;
+      padding: 20px 0;
+      a {
+        margin: 0 auto;
+        display: block;
+        width: 120px;
+        background-color: #7cb83e;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 4px;
+        font-size: 14px;
+      }
     }
     .leak-table-panel {
       padding-bottom: 20px;

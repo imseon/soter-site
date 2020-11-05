@@ -1,4 +1,4 @@
-import { Button, Table, TableColumn, Pagination, Form, FormItem, Input, Dropdown, DropdownItem, DropdownMenu, Row, Col, RadioGroup, RadioButton, Radio, Divider, Upload, Steps, Step, Checkbox } from 'element-ui'
+import { Button, Table, TableColumn, Pagination, Form, FormItem, Input, Dropdown, DropdownItem, DropdownMenu, Row, Col, RadioGroup, RadioButton, Radio, Divider, Upload, Steps, Step, Checkbox, Collapse, CollapseItem } from 'element-ui'
 
 const ElementUI = {
   install: function(Vue) {
@@ -22,6 +22,8 @@ const ElementUI = {
     Vue.use(Steps)
     Vue.use(Step)
     Vue.use(Checkbox)
+    Vue.use(Collapse)
+    Vue.use(CollapseItem)
   }
 }
 

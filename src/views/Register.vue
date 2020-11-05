@@ -101,6 +101,30 @@
                   <el-input placeholder="统一社会信用代码" prefix-icon="el-icon-postcard" v-model="form.uscc"></el-input>
                   <div class="input-error" v-if="errors.uscc">{{ errors.uscc }}</div>
                 </el-form-item>
+                <el-form-item>
+                  <div class="upload-wrapper">
+                    <el-upload :action="uploadUrl" :limit="1" list-type="picture-card" :auto-upload="true" :on-success="handleLicenseSuccess" :before-upload="beforeUpload">
+                      <div class="register-company-upload" slot="default">
+                        <i class="el-icon-plus"></i>
+                        <div class="register-company-upload-text">上传营业执照</div>
+                      </div>
+                    </el-upload>
+                    <el-upload :action="uploadUrl" list-type="picture-card" :auto-upload="true" :on-success="handleIDCardSuccess" :before-upload="beforeUpload">
+                      <div class="register-company-upload" slot="default">
+                        <i class="el-icon-plus"></i>
+                        <div class="register-company-upload-text">上传法人身份证</div>
+                        <div class="register-company-upload-text">正面</div>
+                      </div>
+                    </el-upload>
+                    <el-upload :action="uploadUrl" list-type="picture-card" :auto-upload="true" :on-success="handleIDCardSuccess" :before-upload="beforeUpload">
+                      <div class="register-company-upload" slot="default">
+                        <i class="el-icon-plus"></i>
+                        <div class="register-company-upload-text">上传营业执照</div>
+                        <div class="register-company-upload-text">背面</div>
+                      </div>
+                    </el-upload>
+                  </div>
+                </el-form-item>
                 <el-form-item prop="intro" label="企业介绍">
                   <el-input type="textarea" rows="6" v-model="form.intro"></el-input>
                 </el-form-item>
@@ -219,7 +243,8 @@
               <i class="el-icon-check"></i>
             </div>
             <div class="success-notice">注册成功</div>
-            <div class="active-notice">请您前往邮箱点击链接进行账号激活</div>
+            <div class="active-notice" v-if="form.type !== 3">请您前往邮箱点击链接进行账号激活</div>
+            <div class="active-notice" v-else>请您耐心等待平台管理员审核，审核结果以邮件通知</div>
           </div>
         </div>
         <div class="btn-panel">
@@ -448,7 +473,8 @@ export default {
       },
       activeSuccess: false,
       redirectCountdown: 0,
-      countdownTimer: null
+      countdownTimer: null,
+      uploadUrl: process.env.VUE_APP_API_ROOT + '/upload'
     }
   },
   created() {
@@ -469,7 +495,8 @@ export default {
   },
   computed: mapState({
     checkNameResult: (state) => state.user.checkNameResult,
-    addUserError: (state) => state.user.addUserError
+    addUserError: (state) => state.user.addUserError,
+    addCompanyError: (state) => state.company.addCompanyError
   }),
   methods: {
     redirectToHome() {
@@ -560,6 +587,32 @@ export default {
           this.currStep++
         }
       })
+    },
+    handleLicenseSuccess(res, file) {
+      if (res.code != 'A000000') {
+        Message.error(res.data)
+        return
+      }
+      Message.success('上传成功')
+      this.imgUrl = URL.createObjectURL(file.raw)
+      this.form.license = res.data
+    },
+    handleIDCardSuccess(res, file) {
+      if (res.code != 'A000000') {
+        Message.error(res.data)
+        return
+      }
+      Message.success('上传成功')
+      this.imgUrl = URL.createObjectURL(file.raw)
+      this.form.license = res.data
+    },
+    beforeUpload(file) {
+      let typeArray = ['image/jpeg', 'image/jpg', 'image/png', 'image/bmp']
+      let isJPG = typeArray.indexOf(file.type) > -1
+      if (!isJPG) {
+        Message.error('上传头像图片只能是 JPG/PNG/BMP 格式!')
+      }
+      return isJPG
     }
   }
 }
@@ -630,6 +683,7 @@ export default {
       height: 135px;
       border: 1px solid #7cb83e;
       border-radius: 4px;
+      cursor: pointer;
       .r1 {
         display: flex;
         justify-content: center;
@@ -690,6 +744,32 @@ export default {
       width: 100%;
       margin-bottom: 40px;
     }
+    .upload-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+    .register-company-upload {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      i {
+        background-color: #7cb83e;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        color: white;
+        font-size: 20px;
+        font-weight: bolder;
+        border-radius: 30px;
+      }
+    }
+    .register-company-upload-text {
+      height: 30px;
+      line-height: 30px;
+    }
   }
   .step-4 {
     text-align: center;
@@ -732,6 +812,13 @@ export default {
     width: 100%;
     padding-left: 0;
     padding-right: 0;
+  }
+}
+.step-3 {
+  .el-upload--picture-card {
+    width: 120px;
+    height: 120px;
+    line-height: 120px;
   }
 }
 </style>
