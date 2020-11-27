@@ -26,6 +26,7 @@ Vue.use(VueScrollTo, {
 })
 
 import noticeStore from './stores/notice'
+import materialStore from './stores/material'
 import projectStore from './stores/project'
 import rankStore from './stores/rank'
 import utilStore from './stores/util'
@@ -35,6 +36,7 @@ import companyStore from './stores/company'
 const store = new Vuex.Store({
   modules: {
     notice: noticeStore,
+    material:materialStore,
     project: projectStore,
     rank: rankStore,
     util: utilStore,
@@ -45,6 +47,7 @@ const store = new Vuex.Store({
 
 // 登录检查
 router.beforeEach((to, from, next) => {
+  document.title = '网络公共服务平台'
   let role = localStorage.getItem('t')
   if (!role && ['/login', '/home', '/forgetPwd', '/rule', '/messageCenter', '/register', '/register2', '/register3', '/registerCompany', '/register4', '/registersupp'].indexOf(to.path) < 0) {
     next('/login')

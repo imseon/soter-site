@@ -91,16 +91,18 @@
         </div>
       </div>
     </div>
+    <HomeFooter />
   </div>
 </template>
 
 <script>
 import Header from '@/components/CommonHeader.vue'
+import HomeFooter from '@/components/HomeFooter.vue'
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
 
 export default {
-  components: { Header },
+  components: { Header, HomeFooter },
   data() {
     return {}
   },
@@ -346,7 +348,7 @@ export default {
           top: -33px;
           padding: 5px;
           .project-avatar {
-            background-color: rgba(0, 0, 0, 0.3);
+            background-size: 100%;
             width: 54px;
             height: 54px;
             border-radius: 54px;

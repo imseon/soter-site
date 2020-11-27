@@ -144,6 +144,32 @@ export default {
       if (err) {
         commit('setAddUserError', err)
       }
+    },
+    async checkProject({ commit }, { pid }) {
+      void commit
+      let uid = localStorage.getItem('d')
+      let { data } = await request({
+        url: `${apiRoot}/acc/check/apply/${uid}/${pid}`
+      })
+      return data
+    },
+    async forgetPwd({ commit }, { type, uname }) {
+      void commit
+      let { data, err } = await request({
+        url: `${apiRoot}/util/forgotPwd/${type}/${uname}`
+      })
+      if (err) throw err
+      return data
+    },
+    async resetPwd({ commit }, { params }) {
+      void commit
+      let { data, err } = await request({
+        method: 'POST',
+        url: `${apiRoot}/util/testpwd`,
+        data: params
+      })
+      if (err) throw err
+      return data
     }
   }
 }

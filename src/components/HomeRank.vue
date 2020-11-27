@@ -9,7 +9,7 @@
     </div>
     <div class="top3-wrapper" v-if="rankList">
       <div class="top3-item">
-        <div class="top3-avatar" :style="{ backgroundImage: `url(${rankList[1].picture});` }"></div>
+        <div class="top3-avatar" :style="{ backgroundImage: `url(${rankList[1].picture})` }"></div>
         <div class="top-seq top2">No.2</div>
         <div class="top3-name">{{ rankList[1].name }}</div>
         <div class="top3-summary">
@@ -30,7 +30,7 @@
         </div>
       </div>
       <div class="top3-item top1">
-        <div class="top3-avatar" :style="{ backgroundImage: `url(${rankList[0].picture});` }">
+        <div class="top3-avatar" :style="{ backgroundImage: `url(${rankList[0].picture})` }">
           <div class="top1-crown"></div>
         </div>
         <div class="top-seq top1">No.1</div>
@@ -53,7 +53,7 @@
         </div>
       </div>
       <div class="top3-item">
-        <div class="top3-avatar" :style="{ backgroundImage: `url(${rankList[2].picture});` }"></div>
+        <div class="top3-avatar" :style="{ backgroundImage: `url(${rankList[2].picture})` }"></div>
         <div class="top-seq top3">No.3</div>
         <div class="top3-name">{{ rankList[2].name }}</div>
         <div class="top3-summary">
@@ -77,7 +77,7 @@
     <div class="other-tops-wrapper" v-if="rankList">
       <div v-for="i of [3, 4, 5, 6, 7, 8, 9]" :key="i">
         <div v-if="rankList[i]" class="other-tops-item">
-          <div class="user-avatar" :style="{ backgroundImage: `url(${rankList[i].picture});` }">
+          <div class="user-avatar" :style="{ backgroundImage: `url(${rankList[i].picture})` }">
             <div class="user-seq">{{ i + 1 }}</div>
           </div>
           <div class="user-detail">
@@ -195,6 +195,7 @@ export default {
   color: white;
   line-height: 46px;
   .rank-item {
+    cursor: pointer;
     width: 144px;
     height: 46px;
     padding-left: 100px;
@@ -203,6 +204,7 @@ export default {
       margin-left: 154px;
     }
     &.active {
+      cursor: auto;
       font-weight: bold;
       background: #65dbbd url('../assets/images/crown-green.png') no-repeat left top;
     }
@@ -230,11 +232,11 @@ export default {
     .top3-avatar {
       width: 138px;
       height: 138px;
-      background: #3f66a0;
       position: absolute;
       top: 38px;
       left: 50%;
       margin-left: -69px;
+      background-size: 100% 100%;
       .top1-crown {
         width: 48px;
         height: 56px;
@@ -343,7 +345,7 @@ export default {
       height: 58px;
       border-radius: 58px;
       border: 6px solid #5bc0b6;
-      background: #d2fff4;
+      background-size: 100%;
       position: absolute;
       top: 12px;
       left: 50%;

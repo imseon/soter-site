@@ -47,6 +47,13 @@ export default {
       })
       if (err) commit('setError', err)
       else commit('setProStat', data)
+    },
+    async dic({ commit }, { id }) {
+      void commit
+      let { data } = await request({
+        url: `${apiRoot}/util/dic/${id}`
+      })
+      return data
     }
   }
 }

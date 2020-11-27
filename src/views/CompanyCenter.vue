@@ -21,7 +21,7 @@
           <div class="right-block" id="basic">
             <div class="block-head basic-head">
               <el-upload class="company-avatar-panel" :action="uploadUrl" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                <div class="company-avatar" :style="{ backgroundImage: `url(${account.picture})` }"></div>
+                <div class="company-avatar" :style="{ backgroundImage: `url(${account.avatar})` }"></div>
               </el-upload>
               <div class="company-name">{{ account && account.name }}</div>
               <div class="company-intro">
@@ -72,29 +72,20 @@
               </div>
               <div class="block-btn" style="text-align:right;">
                 <el-row :gutter="20">
-                  <el-col :span="16">
-                    <el-input placeholder="请输入内容" v-model="projectInputKeyword" class="input-search">
+                  <el-col :span="24">
+                    <el-input size="small" placeholder="请输入内容" v-model="projectInputKeyword" class="input-search">
                       <el-button slot="append" icon="el-icon-search" @click="searchProject"></el-button>
                     </el-input>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-dropdown>
-                      <el-button type="primary">所有项目<i class="el-icon-arrow-down el-icon--right"></i> </el-button>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>黄金糕</el-dropdown-item>
-                        <el-dropdown-item>狮子头</el-dropdown-item>
-                        <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                        <el-dropdown-item>双皮奶</el-dropdown-item>
-                        <el-dropdown-item>蚵仔煎</el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
                   </el-col>
                 </el-row>
               </div>
             </div>
             <div class="block-content">
+              <div class="no-result" v-if="projectErr">
+                没有数据
+              </div>
               <div class="project-panel" v-if="myProjects">
-                <div class="project-card" v-for="project of myProjects.list" :key="project.projectId">
+                <router-link tag="div" :to="`/projectInfo?pid=${project.projectId}`" class="project-card" v-for="project of myProjects.list" :key="project.projectId">
                   <div class="project-name">{{ project.projectName }}</div>
                   <div class="project-handle">
                     <div v-if="project.projectStatus == 1" style="height: 35px;">有{{ project.accNum }}人投标待分配</div>
@@ -103,7 +94,7 @@
                     </div>
                     <div v-if="project.projectStatus == 5 || (project.projectStatus == 6 && project.projectStatus != 3)">
                       <span>测试白帽:</span>
-                      <img style="margin-top:0px" :src="project.accPic" alt="" />
+                      <img style="margin-top:0px;display:inline-block;margin:0 4px;vertical-align:middle;" width="20" :src="project.accPic" alt="" />
                       <span>{{ project.accName }}</span>
                     </div>
                   </div>
@@ -146,9 +137,9 @@
                       已结束
                     </div>
                   </div>
-                </div>
+                </router-link>
               </div>
-              <div class="table-pagination">
+              <div class="table-pagination" v-if="myProjects">
                 <el-pagination @current-change="handleProjectPageChange" :total="myProjects.totalNum" :current-page="page" :page-size="pagesize" layout="prev, pager, next"> </el-pagination>
               </div>
               <div class="bottom-btn">
@@ -163,11 +154,8 @@
               </div>
               <div class="block-btn">
                 <el-row :gutter="20">
-                  <el-col :span="8">
-                    <div class="leak-desc">漏洞级别及状态说明</div>
-                  </el-col>
-                  <el-col :span="16">
-                    <el-input placeholder="请输入内容" class="input-search" v-model="leakInputKeyword">
+                  <el-col :span="24">
+                    <el-input placeholder="请输入内容" size="small" class="input-search" v-model="leakInputKeyword">
                       <el-button slot="append" icon="el-icon-search" @click="searchLeak"></el-button>
                     </el-input>
                   </el-col>
@@ -176,13 +164,16 @@
             </div>
             <div class="block-content">
               <div class="leak-table-panel">
-                <el-table v-if="myLeaks" :data="myLeaks.list" border style="width: 100%" header-row-class-name="table-head" @row-click="navToLeakInfo">
+                <div class="no-result" v-if="leakErr">
+                  没有数据
+                </div>
+                <el-table v-if="myLeaks" :data="myLeaks.list" border style="width: 100%" header-row-class-name="table-head" @row-click="navToLeakInfo" row-class-name="pointer-row">
                   <el-table-column align="center" prop="projectName" label="项目" width="286"> </el-table-column>
                   <el-table-column align="center" prop="leakName" label="漏洞名称"> </el-table-column>
                   <el-table-column align="center" prop="createTime" label="提交时间"> </el-table-column>
                   <el-table-column align="center" prop="leakStatus" label="漏洞状态" :formatter="formatLeakStatus"> </el-table-column>
                 </el-table>
-                <div class="table-pagination">
+                <div class="table-pagination" v-if="myLeaks">
                   <el-pagination layout="prev, pager, next"> </el-pagination>
                 </div>
               </div>
@@ -191,16 +182,18 @@
         </div>
       </div>
     </div>
+    <HomeFooter />
   </div>
 </template>
 
 <script>
 import Header from '@/components/CommonHeader.vue'
+import HomeFooter from '@/components/HomeFooter.vue'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
 
 export default {
-  components: { Header },
+  components: { Header, HomeFooter },
   data() {
     return {
       pagesize: 3,
@@ -228,7 +221,9 @@ export default {
   },
   computed: mapState({
     myProjects: (state) => state.project.myProjects,
-    myLeaks: (state) => state.project.myLeaks
+    myLeaks: (state) => state.project.myLeaks,
+    projectErr: (state) => state.project.err,
+    leakErr: (state) => state.project.leakErr
   }),
   methods: {
     async fetch() {
@@ -494,6 +489,7 @@ export default {
           height: 200px;
           border: 1px solid #7cb83e;
           border-radius: 200px;
+          background-size: 100%;
         }
         .set-avatar {
           position: absolute;
@@ -526,11 +522,17 @@ export default {
         padding-bottom: 20px;
       }
     }
+    .no-result {
+      text-align: center;
+      color: #999;
+      padding: 20px;
+    }
     .project-panel {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       .project-card {
+        cursor: pointer;
         margin-top: 50px;
         width: 292px;
         height: 200px;
@@ -549,7 +551,7 @@ export default {
           top: -33px;
           padding: 5px;
           .project-avatar {
-            background-color: rgba(0, 0, 0, 0.3);
+            background-size: 100%;
             width: 54px;
             height: 54px;
             border-radius: 54px;
@@ -660,6 +662,9 @@ export default {
 }
 </style>
 <style lang="scss">
+.pointer-row {
+  cursor: pointer;
+}
 .right-content {
   .el-form-item__label {
     text-align: left;

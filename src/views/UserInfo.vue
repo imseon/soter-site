@@ -15,7 +15,7 @@
             </span>
             天
           </div>
-          <div v-else class="r1">
+          <div class="r1" v-else>
             已结束
           </div>
           <div class="r2">项目期限</div>
@@ -26,8 +26,12 @@
             <h3 class="subtitle">项目名</h3>
             <div class="project-title">{{ projectInfo.title }}</div>
           </div>
+          <div class="project-domain-panel">
+            <h3 class="subtitle">项目范围</h3>
+            <div class="project-title">{{ projectInfo.domain }}</div>
+          </div>
           <div class="project-desc-panel">
-            <h3 class="subtitle">漏洞收集范围</h3>
+            <h3 class="subtitle">项目介绍</h3>
             <div class="project-desc">{{ projectInfo.description }}</div>
           </div>
           <div class="project-bonus">
@@ -51,35 +55,32 @@
           </div>
         </div>
       </div>
-      <div class="block-content" v-if="[0, 3, 5, 6].indexOf(projectInfo.status) !== -1">
-        <div class="project-status" v-if="projectInfo.status === 0">待审核</div>
-        <div class="project-status" v-if="projectInfo.status === 3">审核失败 {{ projectInfo.auditMsg || '' }}</div>
-        <div v-if="projectInfo.status === 5 || projectInfo.status === 6">
-          <h3 class="subtitle">漏洞列表</h3>
-          <el-table class="leak-table" v-if="leaks" :data="leaks.list" border stripe align="center" header-row-class-name="table-head">
-            <el-table-column prop="leakName" label="漏洞" align="center"> </el-table-column>
-            <el-table-column prop="leakLevel" label="漏洞级别" align="center"> </el-table-column>
-            <el-table-column prop="levelType" label="类型" align="center"> </el-table-column>
-            <el-table-column prop="createTime" label="漏洞提交日期" align="center"> </el-table-column>
-            <el-table-column prop="leakStatus" label="漏洞状态" align="center" :formatter="formatStatus"> </el-table-column>
-            <el-table-column prop="leakScore" label="预计漏洞积分" align="center"> </el-table-column>
-          </el-table>
-        </div>
+      <div class="bottom-btn" v-if="projectInfo.status === 1" :disabled="applied">
+        <el-button type="primary" :disabled="applied" @click="applyProject">{{ applied ? '已申领' : '申领项目' }}</el-button>
       </div>
-      <div class="block-content" v-if="projectInfo.status === 1">
-        <h3 class="subtitle">应标人员</h3>
-        <div class="acc-list" v-if="accs">
-          <div v-for="acc of accs.list" :class="{ 'other-tops-item': true, active: selectedAcc && selectedAcc.id === acc.id }" :key="acc.id" @click="select(acc)">
-            <div class="user-avatar" :style="{ backgroundImage: `url(${acc.picture})` }"></div>
-            <div class="user-detail">
-              <div class="detail-1">{{ acc.name }}</div>
-              <div class="detail-2">积分: {{ acc.scoreTotal || 0 }}</div>
-              <div class="detail-3">发现{{ acc.leakNum || 0 }}个漏洞</div>
-            </div>
-          </div>
-        </div>
+      <div class="bottom-btn" v-if="[5, 6].indexOf(projectInfo.status) !== -1 && !mine">
+        <el-button type="primary" disabled>已分配给他人</el-button>
+      </div>
+      <div class="block-content" v-if="[5, 6].indexOf(projectInfo.status) !== -1 && mine">
+        <h3 class="subtitle">漏洞列表</h3>
+        <el-table class="leak-table" :data="leaks && leaks.list" border style="width: 100%; margin-top: 20px;" header-row-class-name="table-head" row-class-name="clickable-row">
+          <el-table-column header-align="center" prop="leakName" label="漏洞名称"> </el-table-column>
+          <el-table-column header-align="center" prop="leakLevel" label="漏洞级别"> </el-table-column>
+          <el-table-column header-align="center" prop="levelType" label="漏洞类型"> </el-table-column>
+          <el-table-column header-align="center" prop="createTime" label="提交时间"> </el-table-column>
+          <el-table-column header-align="center" prop="leakStatus" label="漏洞状态" :formatter="formatStatus"> </el-table-column>
+          <el-table-column header-align="center" prop="leakScore" label="预计积分"> </el-table-column>
+          <el-table-column label="操作" width="150" align="center">
+            <template slot-scope="scope">
+              <el-button v-if="scope.row.leakStatus == 3" @click="handleEdit(scope.row)" type="text" size="small">修改</el-button>
+              <el-button v-else @click="handleInfo(scope.row)" type="text" size="small">查看</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
         <div class="bottom-btn">
-          <el-button type="primary" @click="delegate">选择白帽</el-button>
+          <router-link :to="`/submitLeak?p=${projectInfo.id}`">
+            <el-button type="primary">提交漏洞</el-button>
+          </router-link>
         </div>
       </div>
     </div>
@@ -91,20 +92,25 @@
 import Header from '@/components/CommonHeader.vue'
 // import { Message } from 'element-ui'
 import { mapState } from 'vuex'
-import HomeFooter from '../components/HomeFooter.vue'
 import { Message } from 'element-ui'
+import HomeFooter from '../components/HomeFooter.vue'
 
 export default {
-  components: { Header, HomeFooter },
   data() {
     return {
+      applied: true,
+      mine: true,
       leaks: null,
-      accs: null,
-      selectedAcc: null
+      page: 1,
+      pagesize: 1000
     }
   },
   created() {
     this.fetch()
+  },
+  components: {
+    Header,
+    HomeFooter
   },
   computed: {
     ...mapState({
@@ -124,8 +130,12 @@ export default {
   methods: {
     async fetch() {
       this.$store.dispatch('project/info', { pid: this.$route.query.pid })
-      this.leaks = await this.$store.dispatch('project/leakList', { pid: this.$route.query.pid, pagesize: 1000 })
-      this.accs = await this.$store.dispatch('project/accList', { pid: this.$route.query.pid, order: 1 })
+      let result = await this.$store.dispatch('user/checkProject', { pid: this.$route.query.pid })
+      this.applied = result.isApply
+      this.mine = result.isMe
+      if (this.mine) {
+        this.leaks = await this.$store.dispatch('project/leakList', { pid: this.$route.query.pid, page: this.page, pagesize: this.pagesize })
+      }
     },
     timeDown(endDateStr) {
       var endDate = new Date(endDateStr.replace(/-/g, '/'))
@@ -150,22 +160,19 @@ export default {
         return '已确认'
       }
     },
-    select(acc) {
-      if (!this.selectedAcc || this.selectedAcc.id !== acc.id) {
-        this.selectedAcc = acc
-      } else {
-        this.selectedAcc = null
-      }
-    },
-    async delegate() {
+    async applyProject() {
       try {
-        await this.$store.dispatch('project/delegate', { rid: this.selectedAcc.rid })
+        await this.$store.dispatch('project/apply', { pid: this.$route.query.pid })
       } catch (e) {
-        Message.error('分配失败')
-        return
+        return Message.error(e.message || '申领失败，请稍后重试')
       }
-      Message.success('分配成功')
-      this.$store.dispatch('project/info', { pid: this.$route.query.pid })
+      Message.success('申领成功')
+    },
+    handleInfo(row) {
+      this.$router.push({ path: '/userLeakInfo?a=' + row.leakId })
+    },
+    handleEdit(row) {
+      this.$router.push({ path: '/submitLeak?a=' + row.leakId })
     }
   }
 }
@@ -246,22 +253,16 @@ export default {
       left: -8px;
     }
   }
-  .project-status {
-    font-size: 18px;
-    color: #7cb83e;
-  }
   .project-title {
     margin-top: 20px;
   }
-  .project-desc-panel {
+  .project-desc-panel,
+  .project-domain-panel {
     margin-top: 40px;
   }
   .project-desc {
     margin-top: 20px;
     margin-right: 500px;
-  }
-  .bottom-btn {
-    margin-top: 20px;
   }
   .project-bonus {
     height: 240px;
@@ -340,78 +341,25 @@ export default {
       margin-right: 5px;
     }
   }
-  .leak-table {
-    margin-top: 20px;
-  }
-  .acc-list {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-start;
-    margin-top: 22px;
-    .other-tops-item {
-      width: 156px;
-      height: 156px;
-      position: relative;
-      border: 1px solid #3eb292;
-      cursor: pointer;
-      &:not(:nth-child(5)) {
-        margin-right: 10px;
-      }
-      &.active {
-        background-image: linear-gradient(to top right, #3eb292, #66dbbe);
-        border: 1px solid white;
-        .user-detail {
-          color: white;
-        }
-      }
-      .user-avatar {
-        width: 58px;
-        height: 58px;
-        border-radius: 58px;
-        border: 6px solid #5bc0b6;
-        background-size: 100%;
-        position: absolute;
-        top: 12px;
-        left: 50%;
-        margin-left: -35px;
-        .user-seq {
-          width: 28px;
-          height: 28px;
-          border-radius: 28px;
-          line-height: 28px;
-          background: #3f66a0;
-          font-size: 16px;
-          color: white;
-          text-align: center;
-          font-weight: bolder;
-          position: absolute;
-          bottom: 0;
-          left: -13px;
-        }
-      }
-      .user-detail {
-        position: absolute;
-        width: 100%;
-        text-align: center;
-        color: #666;
-        font-size: 16px;
-        bottom: 10px;
-        .detail-1 {
-          font-weight: bolder;
-        }
-      }
-    }
-  }
+}
+.bottom-btn {
+  text-align: center;
+  margin-top: 20px;
 }
 </style>
 <style lang="scss">
-.leak-table .table-head {
-  background-image: linear-gradient(to right, #3f66a0, #7cb83e);
-  th {
-    background-color: transparent;
-    color: white;
-    font-weight: bolder;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+.leak-table {
+  .table-head {
+    background-image: linear-gradient(to right, #3f66a0, #7cb83e);
+    th {
+      background-color: transparent;
+      color: white;
+      font-weight: bolder;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+  }
+  .clickable-row {
+    cursor: pointer;
   }
 }
 </style>

@@ -1369,11 +1369,13 @@
         </div>
       </div>
     </div>
+    <home-footer/>
   </div>
 </template>
 
 <script>
 import Header from '@/components/CommonHeader'
+import HomeFooter from '../components/HomeFooter.vue'
 export default {
   data: function() {
     return {
@@ -1397,9 +1399,11 @@ export default {
     }
   },
   components: {
-    Header
+    Header,
+    HomeFooter
   },
   created() {
+    
     // this.getList()
   },
   mounted() {

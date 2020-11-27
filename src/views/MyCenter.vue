@@ -169,22 +169,10 @@
               </div>
               <div class="block-btn" style="text-align:right;">
                 <el-row :gutter="20">
-                  <el-col :span="16">
-                    <el-input placeholder="请输入内容" v-model="inputKeyword" class="input-search" size="mini">
+                  <el-col :span="24">
+                    <el-input placeholder="请输入内容" v-model="inputKeyword" class="input-search" size="small">
                       <el-button slot="append" icon="el-icon-search" @click="search"></el-button>
                     </el-input>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-dropdown>
-                      <el-button type="primary" size="mini">所有项目<i class="el-icon-arrow-down el-icon--right"></i> </el-button>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>黄金糕</el-dropdown-item>
-                        <el-dropdown-item>狮子头</el-dropdown-item>
-                        <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                        <el-dropdown-item>双皮奶</el-dropdown-item>
-                        <el-dropdown-item>蚵仔煎</el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
                   </el-col>
                 </el-row>
               </div>
@@ -193,8 +181,8 @@
               <div class="no-result" v-if="projectErr">
                 没有项目
               </div>
-              <div class="project-panel" v-if="myProjects && !projectErr">
-                <div class="project-card" v-for="project of myProjects.list" :key="project.projectId">
+              <div :class="{ 'project-panel': true, less: myProjects.list.length < 3 }" v-if="myProjects && !projectErr">
+                <router-link :to="`/userInfo?pid=${project.projectId}`" class="project-card" v-for="project of myProjects.list" :key="project.projectId">
                   <div class="project-logo">
                     <div class="project-avatar" :style="{ backgroundImage: `url(${project.avatar})` }"></div>
                   </div>
@@ -223,7 +211,7 @@
                     </div>
                   </div>
                   <div class="project-status">有三人投标待分配</div>
-                </div>
+                </router-link>
               </div>
               <div class="table-pagination" v-if="myProjects && !projectErr">
                 <el-pagination :current-page.sync="projectPage" :total="myProjects.totalNum" :page-size="pagesize" layout="prev, pager, next"> </el-pagination>
@@ -237,11 +225,8 @@
               </div>
               <div class="block-btn">
                 <el-row :gutter="20">
-                  <el-col :span="8">
-                    <div class="leak-desc">漏洞级别及状态说明</div>
-                  </el-col>
-                  <el-col :span="16">
-                    <el-input placeholder="请输入内容" class="input-search">
+                  <el-col :span="24">
+                    <el-input placeholder="请输入内容" size="small" class="input-search">
                       <el-button slot="append" icon="el-icon-search"></el-button>
                     </el-input>
                   </el-col>
@@ -251,12 +236,11 @@
             <div class="block-content">
               <div class="leak-table-panel">
                 <el-table :data="myLeaks && myLeaks.list" border style="width: 100%" header-row-class-name="table-head">
-                  <el-table-column align="center" prop="createTime" label="漏洞级别" width="286"> </el-table-column>
                   <el-table-column header-align="center" prop="leakName" label="漏洞名称"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="所属行业"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="提交时间"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="漏洞状态"> </el-table-column>
-                  <el-table-column header-align="center" prop="title" label="奖励积分"> </el-table-column>
+                  <el-table-column header-align="center" prop="projectName" label="项目"> </el-table-column>
+                  <el-table-column header-align="center" prop="companyName" label="公司"> </el-table-column>
+                  <el-table-column header-align="center" prop="createTime" label="提交时间"> </el-table-column>
+                  <el-table-column header-align="center" prop="leakStatus" label="漏洞状态" :formatter="formatStatus"> </el-table-column>
                 </el-table>
                 <div class="table-pagination">
                   <el-pagination layout="prev, pager, next"> </el-pagination>
@@ -444,6 +428,23 @@ export default {
       this.leakKeyword = this.leakInputKeyword
       this.leakPage = 1
       this.$store.dispatch('project/myLeaks', { page: this.leakPage, pagesize: this.pagesize, title: this.leakKeyword })
+    },
+    formatStatus(row) {
+      if (row.leakStatus == 0) {
+        return '待审核'
+      } else if (row.leakStatus == 1) {
+        return '审核通过'
+      } else if (row.leakStatus == 3) {
+        return '审核失败'
+      } else if (row.leakStatus == 4) {
+        return '已确认'
+      } else if (row.leakStatus == 5) {
+        return '已完成'
+      } else if (row.leakStatus == 6) {
+        return '已结束'
+      } else if (row.leakStatus == 7) {
+        return '已确认'
+      }
     }
   }
 }
@@ -700,13 +701,20 @@ export default {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+      &.less {
+        justify-content: flex-start;
+      }
       .project-card {
+        cursor: pointer;
         margin-top: 50px;
         width: 292px;
         height: 200px;
         border-radius: 5px;
         position: relative;
         text-align: center;
+        &:not(:nth-child(3)) {
+          margin-right: 40px;
+        }
         .project-logo {
           width: 54px;
           height: 54px;
@@ -719,7 +727,7 @@ export default {
           top: -33px;
           padding: 5px;
           .project-avatar {
-            background-color: rgba(0, 0, 0, 0.3);
+            background-size: 100%;
             width: 54px;
             height: 54px;
             border-radius: 54px;

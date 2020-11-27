@@ -1,9 +1,9 @@
 <template>
-  <div class="notice">
+  <div class="material">
     <Header />
     <PageBanner>
-      <div class="r1">平台公告中心</div>
-      <div class="r2">PING TAI GONG GAO ZHONG XIN</div>
+      <div class="r1">资料中心</div>
+      <div class="r2">ZI LIAO ZHONG XIN</div>
     </PageBanner>
     <div class="white-area">
       <div class="content-wrapper">
@@ -11,13 +11,17 @@
           <router-link to="/home">回到首页></router-link>
         </div>
         <div class="table-wrapper">
-          <el-table v-if="noticeData" :data="noticeData.list" border style="width: 100%" header-row-class-name="table-head" @row-click="openNotice" row-class-name="notice-table-row">
-            <el-table-column align="center" prop="createTime" label="发布日期" width="286"> </el-table-column>
-            <el-table-column header-align="center" prop="title" label="公告标题"> </el-table-column>
+          <el-table v-if="materialData" :data="materialData.data" border style="width: 100%" header-row-class-name="table-head" @row-click="openInfo" row-class-name="notice-table-row">
+            <el-table-column header-align="left" prop="title" label="标题"> </el-table-column>
+            <el-table-column header-align="left" label="下载" width="100">
+              <template slot-scope="scope">
+                <a target="_blank" v-if="scope.row.annex" @click="(e) => e.stopPropagation()" :href="JSON.parse(scope.row.annex).path">下载资料</a>
+              </template>
+            </el-table-column>
           </el-table>
         </div>
-        <div class="pagination-wrapper" v-if="noticeData">
-          <el-pagination @current-change="handleCurrentChange" :current-page.sync="page" :page-size="pagesize" layout="prev, pager, next, jumper" :total="noticeData.totalNum"> </el-pagination>
+        <div class="pagination-wrapper" v-if="materialData">
+          <el-pagination @current-change="handleCurrentChange" :current-page.sync="page" :page-size="pagesize" layout="prev, pager, next, jumper" :total="materialData.totalItemNum"> </el-pagination>
         </div>
       </div>
     </div>
@@ -28,25 +32,24 @@
 <script>
 import Header from '@/components/CommonHeader.vue'
 import PageBanner from '@/components/PageBanner.vue'
+import HomeFooter from '@/components/HomeFooter.vue'
 import { MessageBox } from 'element-ui'
 
 import { mapState } from 'vuex'
-import HomeFooter from '../components/HomeFooter.vue'
 
 export default {
   components: { Header, PageBanner, HomeFooter },
   data() {
     return {
       pagesize: 10,
-      page: 1,
-      noticeType: 'platform'
+      page: 1
     }
   },
   created() {
     this.fetch()
   },
   computed: mapState({
-    noticeData: (state) => state.notice.notice
+    materialData: (state) => state.material.data
   }),
   methods: {
     handleCurrentChange(page) {
@@ -54,9 +57,9 @@ export default {
       this.fetch()
     },
     fetch() {
-      this.$store.dispatch('notice/fetch', { pagesize: this.pagesize, page: this.page })
+      this.$store.dispatch('material/fetch', { pagesize: this.pagesize, page: this.page })
     },
-    openNotice(notice) {
+    openInfo(notice) {
       MessageBox.alert(notice.content, notice.title, {
         customClass: 'notice-msg-box',
         confirmButtonClass: 'notice-msg-box-confirm-btn',
@@ -69,8 +72,7 @@ export default {
 
 <style scoped lang="scss">
 @import '../styles/common.scss';
-.notice {
-  min-height: 100vh;
+.material {
   background-color: #f7f7f7;
 }
 .page-banner {
@@ -123,6 +125,7 @@ export default {
     text-align: center;
   }
   .el-message-box__message {
+    text-align: left;
     max-height: 600px;
     word-break: break-all;
     overflow: auto;

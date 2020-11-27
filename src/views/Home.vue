@@ -17,6 +17,7 @@
       </div>
     </div>
     <div class="footer-bg">
+      <!-- <div class="divider"></div> -->
       <div class="content-wrapper">
         <HomeFooter />
       </div>
@@ -69,7 +70,13 @@ export default {
 }
 .footer-bg {
   width: 100%;
-  height: 319px;
   background: url('../assets/images/footer-bg.jpg');
+}
+.divider {
+  padding-top: 20px;
+  /* background: url('../assets/images/split-299.png') no-repeat bottom center; */
+  background-size: 100% 1px;
+  height: 1px;
+  overflow: hidden;
 }
 </style>

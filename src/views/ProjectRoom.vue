@@ -14,16 +14,6 @@
             <el-input placeholder="请输入内容" v-model="inputKeyword" class="input-search" size="small">
               <el-button slot="append" icon="el-icon-search" @click="search" native-type="submit"></el-button>
             </el-input>
-            <el-dropdown>
-              <el-button type="primary" size="small"> 所有项目<i class="el-icon-arrow-down el-icon--right"></i> </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
-                <el-dropdown-item>狮子头</el-dropdown-item>
-                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                <el-dropdown-item>双皮奶</el-dropdown-item>
-                <el-dropdown-item>蚵仔煎</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
           </el-form>
         </div>
         <div class="project-wrapper" v-if="projectData">
@@ -42,16 +32,8 @@
                 <div>奖励积分</div>
                 <div>{{ project.leakTopScore }}</div>
               </div>
-              <div class="project-data-item" v-if="project.projectStatus == 5">
-                <div>剩余时间</div>
-                <div>{{ getExpireDay(project.expireDate) }}天</div>
-              </div>
-              <div class="project-data-item" v-if="project.projectStatus == 6">
-                <div>剩余时间</div>
-                <div>已完成</div>
-              </div>
-              <div class="project-data-item" v-if="project.projectStatus == 1">
-                <div>剩余时间</div>
+              <div class="project-data-item">
+                <div>项目时间</div>
                 <div>{{ project.expireDay }}天</div>
               </div>
             </div>
@@ -65,20 +47,25 @@
         <div class="pagination-wrapper" v-if="projectData">
           <el-pagination @current-change="handleCurrentChange" :current-page.sync="page" :page-size="pagesize" layout="prev, pager, next, jumper" :total="projectData.totalNum"> </el-pagination>
         </div>
+        <div class="no-data">
+          没有数据
+        </div>
       </div>
     </div>
+    <HomeFooter />
   </div>
 </template>
 
 <script>
 import Header from '@/components/CommonHeader.vue'
 import PageBanner from '@/components/PageBanner.vue'
+import HomeFooter from '@/components/HomeFooter.vue'
 import { MessageBox } from 'element-ui'
 
 import { mapState } from 'vuex'
 
 export default {
-  components: { Header, PageBanner },
+  components: { Header, PageBanner, HomeFooter },
   data() {
     return {
       page: 1,
@@ -90,6 +77,12 @@ export default {
   },
   created() {
     this.fetch()
+    let query = this.$route.query
+    console.log(query)
+    if (query.s) {
+      this.inputKeyword = query.s
+      this.search()
+    }
   },
   computed: mapState({
     projectData: (state) => state.project.unApplyList
@@ -186,10 +179,11 @@ export default {
   }
 }
 .project-wrapper {
-  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
+  width: 986px;
+  margin: 20px auto 0;
   .project-card {
     margin-top: 50px;
     width: 300px;
@@ -211,7 +205,7 @@ export default {
       top: -33px;
       padding: 5px;
       .project-avatar {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-size: 100%;
         width: 54px;
         height: 54px;
         border-radius: 54px;
@@ -272,6 +266,10 @@ export default {
 .pagination-wrapper {
   text-align: center;
   margin-top: 32px;
+}
+.no-data {
+  padding: 20px;
+  text-align: center;
 }
 </style>
 <style lang="scss">

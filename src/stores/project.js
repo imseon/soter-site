@@ -62,8 +62,10 @@ export default {
       let { data, err } = await request({
         url: `${apiRoot}/acc/unapply/pro/${uid}/${type}/${page}/${pagesize}?title=${title}`
       })
-      if (err) commit('setError', err)
-      else commit('setUnApplyList', data)
+      if (err) {
+        commit('setUnApplyList', null)
+        commit('setError', err)
+      } else commit('setUnApplyList', data)
     },
     async mine({ commit }, { page = 1, pagesize = 6, title = '', type = 'acc' }) {
       commit('setError', null)
@@ -71,8 +73,11 @@ export default {
       let { data, err } = await request({
         url: `${apiRoot}/${type}/pro/${uid}/${page}/${pagesize}?title=${title}`
       })
-      if (err) commit('setError', err)
-      else commit('setMyProjects', data)
+      if (err) {
+        console.log(err)
+        commit('setMyProjects', null)
+        commit('setError', err)
+      } else commit('setMyProjects', data)
     },
     async myLeaks({ commit }, { page = 1, pagesize = 6, title = '', type = 'acc' }) {
       commit('setLeakError', null)
@@ -80,8 +85,10 @@ export default {
       let { data, err } = await request({
         url: `${apiRoot}/${type}/leak/${uid}/${page}/${pagesize}?title=${title}`
       })
-      if (err) commit('setLeakError', err)
-      else commit('setMyLeaks', data)
+      if (err) {
+        commit('setMyLeaks', null)
+        commit('setLeakError', err)
+      } else commit('setMyLeaks', data)
     },
     async add({ commit }, { params }) {
       commit('setError', null)
@@ -100,12 +107,61 @@ export default {
       if (err) commit('setLeakError', err)
       else commit('setLeakInfo', data)
     },
+    async leakList({ commit }, { pid, page = 1, pagesize }) {
+      void commit
+      let { data } = await request({
+        url: `${apiRoot}/leak/list/${pid}/${page}/${pagesize}`
+      })
+      return data
+    },
     async verify({ commit }, { leakId }) {
       commit('setLeakError', null)
       let { err } = await request({
         url: `${apiRoot}/comp/varify/${leakId}`
       })
       if (err) commit('setLeakError', err)
+    },
+    async addLeak({ commit }, { params }) {
+      void commit
+      let { data, err } = await request({
+        method: 'POST',
+        url: `${apiRoot}/leak/add`,
+        data: params
+      })
+      if (err) throw err
+      return data
+    },
+    async updateLeak({ commit }, { params }) {
+      void commit
+      let { data, err } = await request({
+        method: 'POST',
+        url: `${apiRoot}/leak/update`,
+        data: params
+      })
+      if (err) throw err
+      return data
+    },
+    async apply({ commit }, { pid }) {
+      void commit
+      let uid = localStorage.getItem('d')
+      let { err } = await request({
+        url: `${apiRoot}/acc/apply/${uid}/${pid}`
+      })
+      if (err) throw err
+    },
+    async accList({ commit }, { pid, order }) {
+      void commit
+      let { data } = await request({
+        url: `${apiRoot}/pro/acc/list/${pid}/${order}`
+      })
+      return data
+    },
+    async delegate({ commit }, { rid }) {
+      void commit
+      let { err } = await request({
+        url: `${apiRoot}/pro/delegate/${rid}`
+      })
+      if (err) throw err
     }
   }
 }

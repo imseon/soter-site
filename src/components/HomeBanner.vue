@@ -4,26 +4,45 @@
     <div class="l2">企业互联网安全守护计划</div>
     <div class="l3">连接50000+安全专家，快速发现安全隐患</div>
     <div class="banner-btn">
-      <button>立即加入</button>
-    </div>
-    <div class="banner-title">
-      <span class="content">应用漏洞管理平台 /SRC</span>
+      <button v-if="!user" @click="$router.push('/login')">立即加入</button>
     </div>
     <div class="banner-search">
       <div class="search-links">
-        <a class="a1">查看漏洞信息 | </a>
-        <a class="a2">提交漏洞信息</a>
+        <a class="a1">搜索项目</a>
       </div>
       <div class="input-group">
-        <input placeholder="请输入关键词" class="search-input" />
-        <button>查看</button>
+        <el-form @submit="search">
+          <el-form-item>
+            <input v-model="projectKeyword" placeholder="请输入关键词" class="search-input" />
+            <el-button @click="search" class="search-btn" native-type="submit">查看</el-button>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import { mapState } from 'vuex'
+export default {
+  data() {
+    return {
+      projectKeyword: ''
+    }
+  },
+  computed: mapState({
+    user: (state) => state.user.user
+  }),
+  created() {
+    this.$store.dispatch('user/check')
+  },
+  methods: {
+    search(e) {
+      e.preventDefault()
+      this.$router.push('/projectRoom?s=' + this.projectKeyword)
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -95,7 +114,7 @@ export default {}
 }
 .banner-search {
   width: 896px;
-  margin: 50px auto 0;
+  margin: 80px auto 0;
   .search-links {
     padding-bottom: 5px;
     .a2 {
@@ -111,7 +130,7 @@ export default {}
     border: 0 none;
     float: left;
   }
-  button {
+  .search-btn {
     width: 208px;
     height: 48px;
     box-sizing: border-box;

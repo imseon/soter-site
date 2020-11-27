@@ -4,9 +4,9 @@
       <li><router-link class="nav-item" to="/home">首页</router-link></li>
       <li><router-link class="nav-item" to="/projectRoom" v-if="!user || user.u.identitycard">项目大厅</router-link></li>
       <li><router-link class="nav-item" to="/messageCenter">公告中心</router-link></li>
+      <li><router-link class="nav-item" to="/material" v-if="!user || user.u.identitycard">资料中心</router-link></li>
       <li><router-link class="nav-item" to="/rule">帮助中心</router-link></li>
     </ul>
-    <i class="iconfont icon-bell"></i>
   </div>
 </template>
 
@@ -42,6 +42,12 @@ export default {
     color: #7cb83e;
     border-radius: 10px;
     margin: 0 16px;
+    &:hover {
+      color: #7cb83e;
+    }
+  }
+  &:hover {
+    color: #e1f9a5;
   }
 }
 .icon-bell {

@@ -5,7 +5,7 @@
       <router-link to="/register" class="login-btn">注册</router-link>
     </div>
     <el-dropdown v-else trigger="click">
-      <div class="user-avatar" :style="{ backgroundImage: `url(${user.u.picture})` }"></div>
+      <div class="user-avatar" :style="{ backgroundImage: `url(${user.u.picture || user.u.avatar})` }"></div>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item>
           <router-link tag="span" to="/editPwd">修改密码</router-link>
@@ -56,14 +56,15 @@ export default {
   .user-avatar {
     width: 38px;
     height: 38px;
-    background: #2c54a0;
+    background-size: 100%;
     margin-left: 10px;
     margin-top: -7px;
-  }
-  .user-menu-link {
   }
 }
 .login-btn {
   margin-left: 10px;
+  &:hover {
+    color: #e1f9a5;
+  }
 }
 </style>

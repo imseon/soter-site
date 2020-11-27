@@ -18,7 +18,8 @@
                 <el-dropdown-item :command="role" v-for="role of Object.keys(roleMap)" :key="role" :class="{ 'login-role': true, 'active-login-role': role == loginRole }">{{ roleMap[role] }}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-button class="login-submit" @click="onSubmit">立即登录</el-button>
+            <el-button class="login-submit" @click="onSubmit" native-type="submit">立即登录</el-button>
+            <router-link to="/forgetPwd" class="forget-pwd">忘记密码</router-link>
           </el-form-item>
         </el-form>
         <router-link to="/register" class="btn-register">还没有账号？立即注册</router-link>
@@ -64,7 +65,8 @@ export default {
     changeRole(role) {
       this.loginRole = role
     },
-    async onSubmit() {
+    async onSubmit(e) {
+      e.preventDefault()
       let params = {
         account: this.formData.username,
         pwd: this.formData.password,
@@ -153,6 +155,11 @@ export default {
     font-size: 18px;
     border: 0 none;
     border-radius: 0;
+  }
+  .forget-pwd {
+    position: absolute;
+    right: 0;
+    bottom: -40px;
   }
   .el-dropdown-link {
     color: white;

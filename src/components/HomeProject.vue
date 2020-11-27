@@ -3,14 +3,16 @@
     <div class="r1">
       <div class="project-hall">
         <h3>项目大厅</h3>
-        <div class="sub-title">TOP5</div>
+        <div class="sub-title"></div>
         <ul class="project-top" v-if="topProjects">
           <router-link tag="li" :to="`/userInfo?pid=${project.projectId}`" class="project-top-item" v-for="(project, index) of topProjects" :key="project.projectId">
             <span class="seq">{{ index + 1 }}</span>
             <span class="project-avatar" :style="{ backgroundImage: `url(${project.avatar})` }"></span>
             <span class="project-name">{{ project.projectName }}</span>
           </router-link>
-          <li class="link-more">查看更多...</li>
+          <li class="link-more">
+            <router-link to="/projectRoom">查看更多...</router-link>
+          </li>
         </ul>
       </div>
       <div class="project-btn-grid">
@@ -55,17 +57,24 @@
       </div>
       <div class="platform-notice">
         <h3>平台公告</h3>
+        <div class="sub-title"></div>
         <div class="notice-content" v-if="noticeList">
-          <div class="notice-item" v-for="notice of noticeList" :key="notice.id">{{ notice.title }}</div>
+          <div class="notice-item" v-for="(notice, index) of noticeList" :key="notice.id">
+            <router-link to="/messageCenter">{{ index + 1 }}. {{ notice.title }}</router-link>
+          </div>
         </div>
-        <div class="link-more">查看更多...</div>
+        <div class="link-more">
+          <router-link to="/messageCenter">查看更多...</router-link>
+        </div>
       </div>
     </div>
     <div class="r2">
       <div class="c1">
         <div class="find-project-wrapper">
           <h3>奖励计划</h3>
-          <div class="go-detail">查看项目</div>
+          <div class="go-detail">
+            <router-link to="/projectRoom">查看项目</router-link>
+          </div>
           <div class="data-wrapper">
             <div class="data-box">
               <div class="data-r1">{{ proStat ? proStat.delegate : 0 }}</div>
@@ -86,23 +95,19 @@
       <div class="c2">
         <div class="find-people-wrapper">
           <h3>人才筛选</h3>
-          <div class="go-detail">查看详细</div>
+          <div class="go-detail">
+            <a href="#" v-scroll-to="{ el: '#homeRank', offset: 0 }">查看详细</a>
+          </div>
           <div class="data-wrapper">
             <div class="data-box">
               <div class="data-r3">
-                <div class="user-avatar-36"></div>
-              </div>
-              <div class="data-r4">满意度最高</div>
-            </div>
-            <div class="data-box">
-              <div class="data-r3">
-                <div class="user-avatar-36"></div>
+                <div class="user-avatar-36" :style="{ backgroundImage: `url(${accStat && accStat.topLeakNum.picture})` }"></div>
               </div>
               <div class="data-r4">检查漏洞最多</div>
             </div>
             <div class="data-box">
               <div class="data-r3">
-                <div class="user-avatar-36"></div>
+                <div class="user-avatar-36" :style="{ backgroundImage: `url(${accStat && accStat.topScore.picture})` }"></div>
               </div>
               <div class="data-r4">积分最高</div>
             </div>
@@ -183,15 +188,17 @@ export default {
   position: absolute;
   bottom: 20px;
   right: 5px;
-  color: #ccc;
+  a {
+    color: #ccc;
+  }
 }
 .sub-title {
   width: 120px;
   margin: 0 auto;
   color: white;
-  padding-bottom: 6px;
   border-bottom: 1px solid white;
   font-size: 12px;
+  height: 22px;
 }
 .project-top-item {
   height: 36px;
@@ -199,6 +206,7 @@ export default {
   display: flex;
   margin-bottom: 10px;
   color: white;
+  cursor: pointer;
   & > * {
     margin-right: 8px;
   }
@@ -210,7 +218,7 @@ export default {
     width: 36px;
     height: 36px;
     border-radius: 36px;
-    background: #2c54a0;
+    background-size: 100%;
     display: inline-block;
     flex-shrink: 0;
   }
@@ -272,7 +280,7 @@ export default {
   }
 }
 .notice-content {
-  margin-top: 30px;
+  margin-top: 10px;
   padding: 20px;
   text-align: left;
   max-height: 200px;
@@ -296,8 +304,10 @@ export default {
     margin-top: 20px;
   }
   .go-detail {
-    color: #ccc;
     margin-top: 5px;
+    a {
+      color: #ccc;
+    }
   }
 }
 .data-wrapper {
@@ -305,6 +315,7 @@ export default {
   margin-top: 24px;
   background: url('../assets/images/split-299.png') no-repeat center top;
   display: flex;
+  justify-content: center;
   .data-box {
     width: 116px;
     height: 80px;
@@ -329,7 +340,7 @@ export default {
       width: 36px;
       height: 36px;
       border-radius: 36px;
-      background-color: #2c54a2;
+      background-size: 100%;
       margin: 0 auto;
     }
   }

@@ -20,6 +20,11 @@ const routes = [
     component: () => import('../views/Notice.vue')
   },
   {
+    path: '/material',
+    name: 'Material',
+    component: () => import('../views/Material.vue')
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue')
@@ -61,7 +66,12 @@ const routes = [
   },
   {
     path: '/userInfo',
-    name: 'Register',
+    name: 'UserInfo',
+    component: () => import('../views/UserInfo.vue')
+  },
+  {
+    path: '/projectInfo',
+    name: 'ProjectInfo',
     component: () => import('../views/ProjectInfo.vue')
   },
   {
@@ -83,6 +93,26 @@ const routes = [
     path: '/companyleakInfo',
     name: 'CompanyLeakInfo',
     component: () => import('../views/CompanyLeakInfo.vue')
+  },
+  {
+    path: '/submitLeak',
+    name: 'SubmitLeak',
+    component: () => import('../views/SubmitLeak.vue')
+  },
+  {
+    path: '/userLeakInfo',
+    name: 'UserLeakInfo',
+    component: () => import('../views/UserLeakInfo.vue')
+  },
+  {
+    path: '/editPwd',
+    name: 'EditPwd',
+    component: () => import('../views/EditPwd.vue')
+  },
+  {
+    path: '/forgetPwd',
+    name: 'ForgetPwd',
+    component: () => import('../views/ForgetPwd.vue')
   }
 ]
 

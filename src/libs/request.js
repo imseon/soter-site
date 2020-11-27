@@ -10,6 +10,14 @@ export default async function(options) {
     result = await axios(options)
     data = result.data
     if (data.code !== 'A000000') {
+      if (data.code === 'E000004') {
+        localStorage.removeItem('d')
+        localStorage.removeItem('u')
+        localStorage.removeItem('t')
+        location.href = '/#/login'
+        location.reload()
+        return
+      }
       err = data
       data = null
     } else {

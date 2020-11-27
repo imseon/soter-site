@@ -64,6 +64,7 @@
         </div>
       </div>
     </div>
+    <home-footer />
   </div>
 </template>
 
@@ -71,9 +72,10 @@
 import Header from '@/components/CommonHeader.vue'
 import { Message } from 'element-ui'
 import { mapState } from 'vuex'
+import HomeFooter from '../components/HomeFooter.vue'
 
 export default {
-  components: { Header },
+  components: { Header, HomeFooter },
   data() {
     return {
       form: {},
