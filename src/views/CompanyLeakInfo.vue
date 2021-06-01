@@ -7,18 +7,18 @@
           <div class="right-block" id="basic">
             <div class="block-head basic-head">
               <div class="company-avatar-panel">
-                <div class="company-avatar" :style="{ backgroundImage: `url(${account.picture})` }"></div>
+                <div class="company-avatar" :style="{ backgroundImage: `url(${leak && leak.companyAvatar})` }"></div>
               </div>
-              <div class="company-name">{{ account && account.name }}</div>
+              <div class="company-name">{{ leak && leak.companyName }}</div>
               <div class="company-intro">
-                <div class="intro-content">{{ account.intro }}</div>
+                <div class="intro-content">{{ leak && leak.companyIntro }}</div>
               </div>
               <div class="block-btn">
-                <el-button v-if="leak.status == 1" type="success" size="mini" @click="confirm">确认前往修复漏洞</el-button>
-                <el-button v-if="leak.status == 4" type="primary" size="mini" @click="$router.back(-1)">返回</el-button>
+                <el-button v-if="leak && leak.status == 1" type="success" size="mini" @click="confirm">确认前往修复漏洞</el-button>
+                <el-button v-if="leak && leak.status == 4" type="primary" size="mini" @click="$router.back(-1)">返回</el-button>
               </div>
             </div>
-            <div class="block-content data-table">
+            <div class="block-content data-table" v-if="leak">
               <div class="data-item">
                 <div class="data-item-title">漏洞标题</div>
                 <div class="data-item-content">{{ leak.title }}</div>
@@ -47,7 +47,7 @@
                 白帽建议
               </div>
             </div>
-            <div class="block-content data-table">
+            <div class="block-content data-table" v-if="leak">
               <div class="data-item">
                 <div class="data-item-title">简要描述</div>
                 <div class="data-item-content">{{ leak.harm }}</div>
@@ -71,7 +71,7 @@
               </div>
             </div>
           </div>
-          <div class="right-block">
+          <div class="right-block" v-if="leak">
             <div class="block-head">
               <div class="block-title" id="leak">
                 平台建议
@@ -107,7 +107,6 @@ export default {
     return {}
   },
   created() {
-    this.loadAccount()
     this.fetch()
   },
   computed: mapState({
@@ -117,12 +116,6 @@ export default {
   methods: {
     async fetch() {
       this.$store.dispatch('project/leakInfo', { aid: this.$route.query.a })
-    },
-    loadAccount() {
-      let account = localStorage.getItem('u')
-      if (account) {
-        this.account = JSON.parse(account)
-      }
     },
     async confirm() {
       await this.$store.dispatch('project/verify', { leakId: this.leak.id })
@@ -277,6 +270,7 @@ export default {
           height: 200px;
           border: 1px solid #7cb83e;
           border-radius: 200px;
+          background-size: 100%;
         }
         .set-avatar {
           position: absolute;

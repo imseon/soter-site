@@ -15,7 +15,7 @@
             <el-table-column header-align="left" prop="title" label="标题"> </el-table-column>
             <el-table-column header-align="left" label="下载" width="100">
               <template slot-scope="scope">
-                <a target="_blank" v-if="scope.row.annex" @click="(e) => e.stopPropagation()" :href="JSON.parse(scope.row.annex).path">下载资料</a>
+                <a target="_blank" class="down-link" v-if="scope.row.annex" @click="(e) => e.stopPropagation()" :href="JSON.parse(scope.row.annex).path">下载资料</a>
               </template>
             </el-table-column>
           </el-table>
@@ -113,6 +113,9 @@ export default {
   a {
     color: #7cb83e;
   }
+}
+.down-link {
+  color: #666;
 }
 </style>
 <style lang="scss">

@@ -167,6 +167,7 @@ export default {
         return Message.error(e.message || '申领失败，请稍后重试')
       }
       Message.success('申领成功')
+      this.fetch()
     },
     handleInfo(row) {
       this.$router.push({ path: '/userLeakInfo?a=' + row.leakId })
