@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    Copyright © 2019
+    Copyright © 2021
     <!-- <div class="link-col">
       <h3>服务企业</h3>
       <ul class="links">
@@ -101,6 +101,7 @@ export default {}
 .footer {
   text-align: center;
   padding: 20px 0;
+  color: white;
   .link-col {
     vertical-align: top;
     margin-right: 80px;

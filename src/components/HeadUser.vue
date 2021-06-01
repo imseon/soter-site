@@ -64,7 +64,7 @@ export default {
 .login-btn {
   margin-left: 10px;
   &:hover {
-    color: #e1f9a5;
+    color: lighten(#0a9d8d, 30%);
   }
 }
 </style>

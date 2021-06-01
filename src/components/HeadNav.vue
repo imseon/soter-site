@@ -39,15 +39,15 @@ export default {
   color: #ffffff;
   &.router-link-active {
     background-color: #f5f6f5;
-    color: #7cb83e;
+    color: #0a9d8d;
     border-radius: 10px;
     margin: 0 16px;
     &:hover {
-      color: #7cb83e;
+      color: #0a9d8d;
     }
   }
   &:hover {
-    color: #e1f9a5;
+    color: lighten(#0a9d8d, 3%);
   }
 }
 .icon-bell {

@@ -25,6 +25,7 @@ export default {
   height: 44px;
   line-height: 44px;
   overflow: hidden;
+  margin: 0 auto;
 }
 .head-nav {
   float: right;
@@ -35,6 +36,6 @@ export default {
   height: 26px;
   line-height: 26px;
   margin-top: 9px;
-  border-left: 1px solid #b5d3b4;
+  border-left: 1px solid #89d1cb;
 }
 </style>

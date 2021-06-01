@@ -1,8 +1,7 @@
 <template>
   <div class="home-banner">
-    <div class="l1">免费加入</div>
-    <div class="l2">企业互联网安全守护计划</div>
-    <div class="l3">连接50000+安全专家，快速发现安全隐患</div>
+    <div class="l1">争新时代科技创新的引导者</div>
+    <div class="l2">做新时代强军事业的守护者</div>
     <div class="banner-btn">
       <button v-if="!user" @click="$router.push('/login')">立即加入</button>
     </div>
@@ -13,8 +12,9 @@
       <div class="input-group">
         <el-form @submit="search">
           <el-form-item>
-            <input v-model="projectKeyword" placeholder="请输入关键词" class="search-input" />
-            <el-button @click="search" class="search-btn" native-type="submit">查看</el-button>
+            <el-input class="search-input" placeholder="请输入关键词" v-model="projectKeyword">
+              <i @click="search" size="medium" slot="suffix" class="el-input__icon el-icon-search"></i>
+            </el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -47,34 +47,40 @@ export default {
 
 <style scoped lang="scss">
 .l1,
-.l2,
-.l3 {
+.l2 {
   color: #fff;
   line-height: 1;
   margin-bottom: 20px;
+  letter-spacing: 4px;
 }
 .l1 {
-  font-size: 52px;
-  font-weight: lighter;
+  font-size: 70px;
+  position: absolute;
+  top: 176px;
+  right: 60px;
 }
 .l2 {
-  font-size: 54px;
-  font-weight: bolder;
+  font-size: 70px;
+  position: absolute;
+  top: 290px;
+  right: 60px;
 }
-.l3 {
-  font-size: 32px;
-  font-weight: lighter;
-}
-.banner-btn button {
-  width: 256px;
-  height: 64px;
-  line-height: 64px;
-  background-color: transparent;
-  border: 1px solid #fff;
-  font-size: 28px;
-  color: white;
-  font-weight: bolder;
-  border-radius: 5px;
+
+.banner-btn {
+  position: absolute;
+  right: 400px;
+  top: 430px;
+  button {
+    width: 256px;
+    height: 64px;
+    line-height: 64px;
+    background-color: transparent;
+    border: 1px solid #fff;
+    font-size: 28px;
+    color: white;
+    font-weight: bolder;
+    border-radius: 5px;
+  }
 }
 .banner-title {
   color: white;
@@ -113,20 +119,23 @@ export default {
   }
 }
 .banner-search {
-  width: 896px;
-  margin: 80px auto 0;
+  width: 680px;
+  position: absolute;
+  bottom: -55px;
+  left: 50%;
+  margin-left: -340px;
   .search-links {
     padding-bottom: 5px;
+    font-size: 20px;
     .a2 {
       color: #7cb83e;
     }
   }
   .search-input {
-    height: 48px;
-    width: 660px;
-    line-height: 48px;
+    height: 70px;
+    line-height: 70px;
     font-size: 16px;
-    padding: 0 10px;
+    padding: 0;
     border: 0 none;
     float: left;
   }
@@ -145,6 +154,19 @@ export default {
     content: '';
     display: block;
     clear: both;
+  }
+}
+</style>
+<style lang="scss">
+.search-input {
+  input {
+    height: 70px;
+    line-height: 70px;
+    font-size: 20px;
+  }
+  .el-input__suffix {
+    right: 20px;
+    font-size: 24px;
   }
 }
 </style>
